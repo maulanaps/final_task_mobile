@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.submission03.FavoriteListActivity"
+    android:background="@drawable/bottom">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFavoriteList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey_40"
+        tools:listitem="@layout/movie_item"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>
