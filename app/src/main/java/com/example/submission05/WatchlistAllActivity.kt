@@ -8,8 +8,8 @@ import com.example.submission03.databinding.ActivityWatchlistBinding
 import com.example.submission03.model.Movie
 import com.example.submission05.db.DataConverter
 import com.example.submission05.db.watchlist.WatchListDatabase
-import com.example.submission05.watchlist_showAll.WatchlistShowAllAdapter
-import com.example.submission05.watchlist_showAll.WatchlistShowAllDelegate
+import com.example.submission05.rv_watchlist_showAll.WatchlistShowAllAdapter
+import com.example.submission05.rv_watchlist_showAll.WatchlistShowAllDelegate
 import com.faltenreich.skeletonlayout.Skeleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

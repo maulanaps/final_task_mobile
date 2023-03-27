@@ -108,6 +108,7 @@ class MovieListActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<Movies>, t: Throwable) {
                 Log.d("foo", "onFailure: ${t.message}")
+                loading.endLoading()
                 ErrorDialog.showError(this@MovieListActivity, "Failed to load data")
             }
         })

@@ -1,4 +1,4 @@
-package com.example.submission05.watchlist_showAll
+package com.example.submission05.rv_watchlist_showAll
 
 import com.example.submission03.model.Movie
 

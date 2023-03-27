@@ -1,4 +1,4 @@
-package com.example.submission05.watchlist_showAll
+package com.example.submission05.rv_watchlist_showAll
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.submission03.R
 import com.example.submission03.model.Movie
-import com.example.submission05.db.watchlist.WatchListDatabase
 
 class WatchlistShowAllAdapter : RecyclerView.Adapter<WatchlistShowAllViewHolder>() {
 

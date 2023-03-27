@@ -97,6 +97,7 @@ class TvShowListActivity : AppCompatActivity() {
 
             override fun onFailure(call: Call<TvShows>, t: Throwable) {
                 Log.d("foo", "onFailure: ${t.message}")
+                loading.endLoading()
                 ErrorDialog.showError(this@TvShowListActivity, "Failed to load data")
             }
         })

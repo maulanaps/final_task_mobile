@@ -11,8 +11,11 @@ class ErrorDialog {
             val builder = AlertDialog.Builder(activity)
             builder.setTitle("Error")
             builder.setMessage(message)
-            builder.setPositiveButton("OK",  null)
+            builder.setPositiveButton("OK") { _, _ ->
+                activity.finish()
+            }
             builder.show()
         }
+
     }
 }
