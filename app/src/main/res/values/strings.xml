@@ -25,4 +25,7 @@
     <string name="tdp_batch_3_final_task">TDP Batch 3 - Final Task</string>
     <string name="loading_data">Loading Data</string>
     <string name="add_to_watch_list">Add to Watch List</string>
+    <string name="remove_from_watch_list">Remove from Watch List</string>
+    <string name="your_watch_list">Your Watch List</string>
+    <string name="show_all">Show All</string>
 </resources>

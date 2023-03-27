@@ -1,21 +1,22 @@
-package com.example.submission05.db
+package com.example.submission05.db.watchlist
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.submission03.model.Movie
+import com.example.submission03.model.MovieEntity
 
-@Database(entities = [Movie::class], version = 1)
-abstract class AppDatabase : RoomDatabase() {
-    abstract fun roomMovieDao(): RoomMovieDao
+@Database(entities = [MovieEntity::class], version = 1)
+abstract class WatchListDatabase : RoomDatabase() {
+    abstract fun WatchListDao(): WatchListDao
 
     companion object {
 
         @Volatile
-        private var INSTANCE: AppDatabase? = null
+        private var INSTANCE: WatchListDatabase? = null
 
-        fun getInstance(context: Context): AppDatabase {
+        fun getInstance(context: Context): WatchListDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = buildDatabase(context)
                 INSTANCE = instance
@@ -23,11 +24,11 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        private fun buildDatabase(context: Context): AppDatabase {
+        private fun buildDatabase(context: Context): WatchListDatabase {
             return Room.databaseBuilder(
                 context.applicationContext,
-                AppDatabase::class.java,
-                "movieKu.db"
+                WatchListDatabase::class.java,
+                "watchListKu.db"
             ).build()
         }
     }

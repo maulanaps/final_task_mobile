@@ -8,16 +8,24 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.*
 import com.example.submission03.databinding.ActivityMainBinding
+import com.example.submission03.model.Movie
 import com.example.submission05.constants.Constants.Companion.AIRING_TODAY
 import com.example.submission05.constants.Constants.Companion.NOW_PLAYING
 import com.example.submission05.constants.Constants.Companion.ON_THE_AIR
 import com.example.submission05.constants.Constants.Companion.POPULAR
 import com.example.submission05.constants.Constants.Companion.TOP_RATED
 import com.example.submission05.constants.Constants.Companion.UPCOMING
-import com.example.submission05.dialog.ErrorDialog
+import com.example.submission05.db.DataConverter
+import com.example.submission05.db.watchlist.WatchListDatabase
+import com.example.submission05.rv_watchlist.WatchlistAdapter
+import com.example.submission05.rv_watchlist.WatchlistDelegate
 
 @SuppressLint("StaticFieldLeak")
+
+private lateinit var adapter: WatchlistAdapter
 private lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -42,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 builder.show()
             } else {
-                MovieListActivity.open(this@MainActivity, "Top Rated Movies", null, query)
+                MovieListActivity.open(this@MainActivity, "Searched Movies", null, query)
             }
         }
 
@@ -80,10 +88,31 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // FAVORITES
-        binding.favoriteMoviesFavoriteMovie.setOnClickListener {
-            FavoriteListActivity.open(this@MainActivity)
-//            ErrorDialog.showError(this@MainActivity, "Failed to load data")
+        // WATCHLIST SHOW ALL
+        binding.tvShowAllWatchList.setOnClickListener {
+            val intent = Intent(this@MainActivity, WatchlistAllActivity::class.java)
+            startActivity(intent)
+        }
+
+        // WATCHLIST SETUP
+        binding.rvWatchList.layoutManager = LinearLayoutManager(this@MainActivity, HORIZONTAL,false)
+        adapter = WatchlistAdapter()
+        binding.rvWatchList.adapter = adapter
+
+        // GET WATCHLIST DATA
+        val watchListDb = WatchListDatabase.getInstance(this@MainActivity)
+        val watchListDao = watchListDb.WatchListDao()
+
+        watchListDao.getAll().observe(this@MainActivity) {watchlistMovies ->
+            val movieEntities = watchlistMovies.map { DataConverter.entityToMovie(it) }
+            adapter.setAdapter(movieEntities)
+        }
+
+        // WATCHLIST ITEM ON CLICK
+        adapter.delegate = object : WatchlistDelegate {
+            override fun onItemClicked(movie: Movie) {
+                MovieDetailActivity.open(this@MainActivity, "Your Watch List", movie)
+            }
         }
     }
 

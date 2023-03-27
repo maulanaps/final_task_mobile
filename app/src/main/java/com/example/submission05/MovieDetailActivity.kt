@@ -16,7 +16,8 @@ import com.bumptech.glide.request.target.Target
 import com.example.submission03.databinding.ActivityMovieDetailBinding
 import com.example.submission03.model.Movie
 import com.example.submission05.dialog.ErrorDialog
-import com.example.submission05.db.AppDatabase
+import com.example.submission05.db.DataConverter
+import com.example.submission05.db.watchlist.WatchListDatabase
 import com.faltenreich.skeletonlayout.Skeleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -92,7 +93,6 @@ class MovieDetailActivity : AppCompatActivity() {
                     isFirstResource: Boolean
                 ): Boolean {
                     Log.d("foo", "onResourceReady: POSTER image ready")
-//                    posterSkeleton.showOriginal()
                     skeletonPoster.showOriginal()
                     return false
                 }
@@ -105,36 +105,37 @@ class MovieDetailActivity : AppCompatActivity() {
             detailRating.text = "⭐ ${movieDetail.voteAverage}"
             detailOverview.text = movieDetail.overview
 
-            val db = AppDatabase.getInstance(this@MovieDetailActivity)
-
-            val movieDao = db.roomMovieDao()
-            movieDao
-                .getFavoriteById(movieDetail.id.toString())
+            // favorite db
+            val watchListDb = WatchListDatabase.getInstance(this@MovieDetailActivity)
+            val watchListDao = watchListDb.WatchListDao()
+            watchListDao
+                .getMovieById(movieDetail.id.toString())
                 .observe(this@MovieDetailActivity) {
                     if (it.isEmpty()) {
-                        ivAddFavorite.visibility = View.VISIBLE
-                        ivRemoveFavorite.visibility = View.GONE
+                        tvAddWatchList.visibility = View.VISIBLE
+                        tvRemoveWatchList.visibility = View.GONE
                     } else {
-                        ivAddFavorite.visibility = View.GONE
-                        ivRemoveFavorite.visibility = View.VISIBLE
+                        tvAddWatchList.visibility = View.GONE
+                        tvRemoveWatchList.visibility = View.VISIBLE
                     }
                 }
 
-            ivAddFavorite.setOnClickListener {
+            tvAddWatchList.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
-                    movieDao.insert(movieDetail)
-                    Log.d("blah", "addFavorite: movie ${movieDetail.title} saved to favorite")
+                    val movieEntity = DataConverter.movieToEntity(movieDetail)
+                    watchListDao.insert(movieEntity)
+                    Log.d("blah", "addWatchList: movie ${movieDetail.title} saved to watch list")
                 }
             }
 
-            ivRemoveFavorite.setOnClickListener {
+            tvRemoveWatchList.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
-                    movieDao.delete(movieDetail)
-                    Log.d("blah", "removeFavorite: movie ${movieDetail.title} removed from favorite")
+                    val movieEntity = DataConverter.movieToEntity(movieDetail)
+                    watchListDao.delete(movieEntity)
+                    Log.d("blah", "removeWatchList: movie ${movieDetail.title} removed to watch list")
                 }
             }
         }
-
     }
 
     companion object {

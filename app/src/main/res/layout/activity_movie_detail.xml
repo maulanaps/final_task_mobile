@@ -95,7 +95,7 @@
             tools:text="⭐ 8.7" />
 
         <TextView
-            android:id="@+id/tvWatchList"
+            android:id="@+id/tvAddWatchList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -110,39 +110,34 @@
             app:layout_constraintTop_toBottomOf="@id/detailRating"/>
 
         <TextView
+            android:id="@+id/tvRemoveWatchList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/customborder"
+            android:text="@string/remove_from_watch_list"
+            android:textAlignment="center"
+            android:padding="8dp"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detailRating"/>
+
+        <TextView
             android:id="@+id/detailOverview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="70dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvWatchList"
+            app:layout_constraintTop_toBottomOf="@id/detailRating"
             tools:ignore="VisualLintLongText"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque, orci et suscipit mollis, ligula tortor eleifend enim,vel laoreet lorem turpis egestas dui. Maecenas mauris justo, hendreritin dignissim nec, convallis eget lectus. Duis viverra sapien et leo rhoncus, vel viverra ligula egestas. Duis quis leo lacus. Aliquam dignissim arcu velit, non tempus erat vehicula id." />
-
-        <ImageView
-            android:id="@+id/ivAddFavorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/star_blank"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/ivRemoveFavorite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/star_fill"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
