@@ -28,4 +28,12 @@
     <string name="remove_from_watch_list">Remove from Watch List</string>
     <string name="your_watch_list">Your Watch List</string>
     <string name="show_all">Show All</string>
+    <string name="comment_section">Comment Section</string>
+    <string name="write_review">Write Review</string>
+    <string name="name">Name</string>
+    <string name="comment">Comment</string>
+    <string name="please_fill_your_name">Please fill your name...</string>
+    <string name="comment_hint">Comment...</string>
+    <string name="submit">Submit</string>
+    <string name="delete">Delete</string>
 </resources>

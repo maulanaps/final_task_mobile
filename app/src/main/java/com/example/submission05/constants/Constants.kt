@@ -8,5 +8,7 @@ class Constants() {
         const val POPULAR = "popular"
         const val ON_THE_AIR = "on_the_air"
         const val AIRING_TODAY = "airing_today"
+        const val WRITE_COMMENT = "write_comment"
+        const val EDIT_COMMENT = "edit_comment"
     }
 }

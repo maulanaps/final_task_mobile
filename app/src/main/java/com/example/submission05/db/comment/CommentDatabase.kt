@@ -1,22 +1,24 @@
-package com.example.submission05.db.watchlist
+package com.example.submission05.db.comment
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.example.submission03.model.Movie
-import com.example.submission03.model.MovieEntity
+import androidx.room.*
+import androidx.room.migration.AutoMigrationSpec
+import com.example.submission05.model.CommentEntity
 
-@Database(entities = [MovieEntity::class], version = 1)
-abstract class WatchListDatabase : RoomDatabase() {
-    abstract fun WatchListDao(): WatchListDao
+@Database(
+    entities = [CommentEntity::class],
+    version = 1,
+    exportSchema = false
+)
+abstract class CommentDatabase : RoomDatabase() {
 
+    abstract fun CommentDao(): CommentDao
     companion object {
 
         @Volatile
-        private var INSTANCE: WatchListDatabase? = null
+        private var INSTANCE: CommentDatabase? = null
 
-        fun getInstance(context: Context): WatchListDatabase {
+        fun getInstance(context: Context): CommentDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = buildDatabase(context)
                 INSTANCE = instance
@@ -24,12 +26,14 @@ abstract class WatchListDatabase : RoomDatabase() {
             }
         }
 
-        private fun buildDatabase(context: Context): WatchListDatabase {
+        private fun buildDatabase(context: Context): CommentDatabase {
             return Room.databaseBuilder(
                 context.applicationContext,
-                WatchListDatabase::class.java,
-                "watchListKu.db"
-            ).build()
+                CommentDatabase::class.java,
+                "commentKu.db"
+            )
+                .fallbackToDestructiveMigration()
+                .build()
         }
     }
 }

@@ -9,4 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey_40">#1AFFFFFF</color>
     <color name="green_logo">#00D374</color>
+    <color name="grey">#1E1C1C</color>
+    <color name="grey_comment_form">#403F3F</color>
+    <color name="grey_comment_hint">#918B8B</color>
 </resources>

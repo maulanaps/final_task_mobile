@@ -8,6 +8,9 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -15,15 +18,23 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.submission03.databinding.ActivityMovieDetailBinding
 import com.example.submission03.model.Movie
+import com.example.submission05.constants.Constants.Companion.EDIT_COMMENT
+import com.example.submission05.constants.Constants.Companion.WRITE_COMMENT
 import com.example.submission05.dialog.ErrorDialog
 import com.example.submission05.db.DataConverter
+import com.example.submission05.db.comment.CommentDatabase
 import com.example.submission05.db.watchlist.WatchListDatabase
+import com.example.submission05.model.CommentEntity
+import com.example.submission05.rv_comment.CommentAdapter
+import com.example.submission05.rv_comment.CommentDelegate
 import com.faltenreich.skeletonlayout.Skeleton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 private lateinit var binding: ActivityMovieDetailBinding
+private lateinit var adapter: CommentAdapter
+private lateinit var skeleton: Skeleton
 
 class MovieDetailActivity : AppCompatActivity() {
     @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
@@ -35,11 +46,21 @@ class MovieDetailActivity : AppCompatActivity() {
         // EXTRAS
         val movieDetail = intent.getParcelableExtra<Movie>(MOVIE_DETAIL) as Movie
         val title = intent.getStringExtra(PAGE_TITLE)
-
         supportActionBar?.title = title
 
+        // RV AND ADAPTER
+        val layoutManager = LinearLayoutManager(this@MovieDetailActivity, VERTICAL, false)
+        binding.rvComment.layoutManager = layoutManager
+        adapter = CommentAdapter()
+        binding.rvComment.adapter = adapter
+
+        // SKELETON
         val skeletonBackdrop: Skeleton = findViewById(R.id.skeletonLayoutBackdrop)
+        val skeletonPoster: Skeleton = findViewById(R.id.skeletonLayoutPoster)
         skeletonBackdrop.showSkeleton()
+        skeletonPoster.showSkeleton()
+
+        // GET DATA
         Glide.with(this)
             .load("https://image.tmdb.org/t/p/original" + movieDetail.backdropPath)
             .addListener(object : RequestListener<Drawable> {
@@ -68,9 +89,6 @@ class MovieDetailActivity : AppCompatActivity() {
             })
             .into(binding.detailBackdrop)
 
-
-        val skeletonPoster: Skeleton = findViewById(R.id.skeletonLayoutPoster)
-        skeletonPoster.showSkeleton()
         Glide.with(this)
             .load("https://image.tmdb.org/t/p/original" + movieDetail.posterPath)
             .addListener(object : RequestListener<Drawable> {
@@ -105,7 +123,7 @@ class MovieDetailActivity : AppCompatActivity() {
             detailRating.text = "⭐ ${movieDetail.voteAverage}"
             detailOverview.text = movieDetail.overview
 
-            // favorite db
+            // watchlist db
             val watchListDb = WatchListDatabase.getInstance(this@MovieDetailActivity)
             val watchListDao = watchListDb.WatchListDao()
             watchListDao
@@ -118,6 +136,15 @@ class MovieDetailActivity : AppCompatActivity() {
                         tvAddWatchList.visibility = View.GONE
                         tvRemoveWatchList.visibility = View.VISIBLE
                     }
+                }
+
+            // comment db
+            val commentDb = CommentDatabase.getInstance(this@MovieDetailActivity)
+            val commentDao = commentDb.CommentDao()
+            commentDao
+                .getCommentsByMovieId(movieDetail.id.toString())
+                .observe(this@MovieDetailActivity) {
+                    adapter.setAdapter(it)
                 }
 
             tvAddWatchList.setOnClickListener {
@@ -133,6 +160,16 @@ class MovieDetailActivity : AppCompatActivity() {
                     val movieEntity = DataConverter.movieToEntity(movieDetail)
                     watchListDao.delete(movieEntity)
                     Log.d("blah", "removeWatchList: movie ${movieDetail.title} removed to watch list")
+                }
+            }
+
+            tvWriteComment.setOnClickListener {
+                CommentFormActivity.open(this@MovieDetailActivity, movieDetail.id!!, WRITE_COMMENT, null)
+            }
+
+            adapter.delegate = object : CommentDelegate {
+                override fun onItemClicked(commentEntity: CommentEntity) {
+                    CommentFormActivity.open(this@MovieDetailActivity, movieDetail.id!!, EDIT_COMMENT, commentEntity)
                 }
             }
         }

@@ -1,4 +1,4 @@
-package com.example.submission03.movie
+package com.example.submission05.rv_comment
 
 import android.view.View
 import android.widget.ImageView
@@ -6,9 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.submission03.R
 
-class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val poster: ImageView = itemView.findViewById(R.id.ivPoster)
-    val title: TextView = itemView.findViewById(R.id.tvTitle)
-    val rating: TextView = itemView.findViewById(R.id.tvRating)
-    val overview: TextView = itemView.findViewById(R.id.tvOverview)
+class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    val writer: TextView = itemView.findViewById(R.id.tvCommentWriter)
+    val content: TextView = itemView.findViewById(R.id.tvCommentContent)
 }

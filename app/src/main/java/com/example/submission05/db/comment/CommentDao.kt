@@ -1,24 +1,23 @@
-package com.example.submission05.db.watchlist
+package com.example.submission05.db.comment
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import com.example.submission03.model.Movie
-import com.example.submission03.model.MovieEntity
+import androidx.room.*
+import com.example.submission05.model.CommentEntity
 
 @Dao
-interface WatchListDao {
-    @Query("SELECT * FROM watchlist_table")
-    fun getAll() : LiveData<List<MovieEntity>>
+interface CommentDao {
+    @Query("SELECT * FROM comment_table WHERE movie_id = :movieId")
+    fun getCommentsByMovieId(movieId: String) : LiveData<List<CommentEntity>>
 
-    @Query("SELECT * FROM watchlist_table WHERE id = :id")
-    fun getMovieById(id: String) : LiveData<List<MovieEntity>>
+    @Query("SELECT * FROM comment_table WHERE id = :id")
+    fun getCommentById(id: String) : LiveData<List<CommentEntity>>
 
     @Insert
-    fun insert(movie: MovieEntity)
+    fun insert(commentEntity: CommentEntity)
 
     @Delete
-    fun delete(movie: MovieEntity)
+    fun delete(commentEntity: CommentEntity)
+
+    @Update
+    fun update(commentEntity: CommentEntity)
 }

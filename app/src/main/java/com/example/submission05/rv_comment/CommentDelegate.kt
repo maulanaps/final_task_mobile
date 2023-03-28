@@ -1,7 +1,7 @@
-package com.example.submission03.movie
+package com.example.submission05.rv_comment
 
-import com.example.submission03.model.Movie
+import com.example.submission05.model.CommentEntity
 
-interface MovieDelegate {
-    fun onItemClicked(movie: Movie)
+interface CommentDelegate {
+    fun onItemClicked(commentEntity: CommentEntity)
 }

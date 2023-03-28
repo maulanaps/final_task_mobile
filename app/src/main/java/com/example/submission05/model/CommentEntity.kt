@@ -1,15 +1,18 @@
 package com.example.submission05.model
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "comment_table")
-data class Comment(
+@Parcelize
+data class CommentEntity(
 
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int? = null,
     @ColumnInfo("movie_id") val movieId: Int,
-    @ColumnInfo("writer") val writer: String,
-    @ColumnInfo("content") val content: String
+    @ColumnInfo("writer") var writer: String,
+    @ColumnInfo("content") var content: String
 
-)
+) : Parcelable

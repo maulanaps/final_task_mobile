@@ -1,39 +1,32 @@
-package com.example.submission03.movie
+package com.example.submission05.rv_comment
 
 import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.submission03.R
-import com.example.submission03.model.Movie
+import com.example.submission05.model.CommentEntity
 
-class MovieAdapter : RecyclerView.Adapter<MovieViewHolder>() {
+class CommentAdapter : RecyclerView.Adapter<CommentViewHolder>() {
 
-    private val list: MutableList<Movie> = mutableListOf()
-    var delegate: MovieDelegate? = null
+    private val list: MutableList<CommentEntity> = mutableListOf()
+    var delegate: CommentDelegate? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.movie_item, parent, false)
-        return MovieViewHolder(view)
+            .inflate(R.layout.comment_item, parent, false)
+        return CommentViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         // input data into view holder
-        Glide.with(holder.itemView.context)
-            .load("https://image.tmdb.org/t/p/original" + list[position].posterPath)
-            .placeholder(R.drawable.image_placeholder)
-            .into(holder.poster)
-        val item = list[position]
-//        Log.d("foo", "onBindViewHolder: $item")
+        holder.writer.text = list[position].writer
+        holder.content.text = list[position].content
 
-        holder.title.text = list[position].title
-        holder.rating.text = "Rating: " + list[position].voteAverage.toString()
-        holder.overview.text = list[position].overview
+        // events
         holder.itemView.setOnClickListener {
             delegate?.onItemClicked(list[position])
         }
@@ -45,10 +38,10 @@ class MovieAdapter : RecyclerView.Adapter<MovieViewHolder>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setAdapter(movies: List<Movie>) {
+    fun setAdapter(comments: List<CommentEntity>) {
         list.clear()
-        list.addAll(movies)
-        Log.d("blah", "setAdapter: ${movies.size}")
+        list.addAll(comments)
+        Log.d("blah", "setAdapter: ${comments.size}")
         notifyDataSetChanged()
     }
 }

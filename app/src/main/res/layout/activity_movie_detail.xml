@@ -139,5 +139,43 @@
             tools:ignore="VisualLintLongText"
             tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut scelerisque, orci et suscipit mollis, ligula tortor eleifend enim,vel laoreet lorem turpis egestas dui. Maecenas mauris justo, hendreritin dignissim nec, convallis eget lectus. Duis viverra sapien et leo rhoncus, vel viverra ligula egestas. Duis quis leo lacus. Aliquam dignissim arcu velit, non tempus erat vehicula id." />
 
+        <ImageView
+            android:id="@+id/ivCommentBorder"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:layout_constraintTop_toBottomOf="@id/detailOverview"
+            android:background="@color/grey"
+            android:layout_marginTop="20dp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comment_section"
+            android:textColor="@color/white"
+            android:layout_marginTop="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="20dp"
+            app:layout_constraintTop_toBottomOf="@id/ivCommentBorder"/>
+
+        <TextView
+            android:id="@+id/tvWriteComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/write_review"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintTop_toBottomOf="@id/ivCommentBorder"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            tools:listitem="@layout/comment_item"
+            app:layout_constraintTop_toBottomOf="@id/tvWriteComment"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
