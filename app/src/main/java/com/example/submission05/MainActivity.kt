@@ -95,7 +95,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         // WATCHLIST SETUP
-        binding.rvWatchList.layoutManager = LinearLayoutManager(this@MainActivity, HORIZONTAL,false)
         adapter = WatchlistAdapter()
         binding.rvWatchList.adapter = adapter
 

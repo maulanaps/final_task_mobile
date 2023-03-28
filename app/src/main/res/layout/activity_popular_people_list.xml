@@ -12,7 +12,7 @@
         android:id="@+id/rvPopularPeopleList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_40"
+        android:background="@color/grey_10"
         tools:listitem="@layout/popular_people_item"
         android:foregroundGravity="center"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"

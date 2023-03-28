@@ -16,8 +16,8 @@
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="0dp"
-            android:layout_height="70dp"
-            android:layout_marginTop="60dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="40dp"
             android:contentDescription="@string/logo"
             android:src="@drawable/logo"
             app:layout_constraintDimensionRatio="1:1"
@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@color/grey_40"
+            android:background="@color/grey_10"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:paddingBottom="50dp"
@@ -529,6 +529,8 @@
                 app:layout_constraintTop_toBottomOf="@id/tvWatchList"
                 android:layout_marginTop="10dp"
                 tools:listitem="@layout/watchlist_item"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

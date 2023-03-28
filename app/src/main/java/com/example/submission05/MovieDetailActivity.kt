@@ -34,7 +34,6 @@ import kotlinx.coroutines.launch
 
 private lateinit var binding: ActivityMovieDetailBinding
 private lateinit var adapter: CommentAdapter
-private lateinit var skeleton: Skeleton
 
 class MovieDetailActivity : AppCompatActivity() {
     @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")

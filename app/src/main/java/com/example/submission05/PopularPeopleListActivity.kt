@@ -56,6 +56,7 @@ class PopularPeopleListActivity : AppCompatActivity() {
         adapter.delegate = object : PopularPeopleDelegate {
             override fun onItemClicked(popularPeople: PopularPeople) {
                 Log.d("foo", "onItemClicked: $popularPeople")
+                PopularPeopleDetailActivity.open(this@PopularPeopleListActivity, popularPeople.id!!, popularPeople.popularPeopleKnownFor)
             }
         }
     }

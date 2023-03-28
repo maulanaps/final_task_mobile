@@ -11,7 +11,7 @@
         android:id="@+id/rvTvShow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/grey_40"
+        android:background="@color/grey_10"
         tools:listitem="@layout/tvshow_item"
         app:layout_constraintTop_toTopOf="parent"/>
 

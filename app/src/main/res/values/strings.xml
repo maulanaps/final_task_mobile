@@ -36,4 +36,6 @@
     <string name="comment_hint">Comment...</string>
     <string name="submit">Submit</string>
     <string name="delete">Delete</string>
+    <string name="known_for">Known For</string>
+    <string name="biography">Biography</string>
 </resources>

@@ -13,6 +13,6 @@
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp"
-        android:background="@color/grey_40"
+        android:background="@color/grey_10"
         tools:listitem="@layout/watchlist_all_item"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
