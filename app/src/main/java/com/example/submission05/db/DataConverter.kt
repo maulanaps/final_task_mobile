@@ -1,43 +1,42 @@
 package com.example.submission05.db
 
-import com.example.submission03.model.Movie
-import com.example.submission03.model.MovieEntity
+import com.example.submission03.model.MovieAndTvShow
 
 class DataConverter {
     companion object {
-        fun movieToEntity(movie: Movie): MovieEntity {
-            return MovieEntity(
-                movie.id,
-                movie.adult,
-                movie.backdropPath,
-                movie.originalLanguage,
-                movie.originalTitle,
-                movie.overview,
-                movie.popularity,
-                movie.posterPath,
-                movie.releaseDate,
-                movie.title,
-                movie.video,
-                movie.voteAverage,
-                movie.voteCount
+        fun movieToEntity(movieAndTvShow: MovieAndTvShow): MovieAndTvShow {
+            return MovieAndTvShow(
+                movieAndTvShow.id,
+                movieAndTvShow.adult,
+                movieAndTvShow.backdropPath,
+                movieAndTvShow.originalLanguage,
+                movieAndTvShow.originalTitle,
+                movieAndTvShow.overview,
+                movieAndTvShow.popularity,
+                movieAndTvShow.posterPath,
+                movieAndTvShow.releaseDate,
+                movieAndTvShow.title,
+                movieAndTvShow.video,
+                movieAndTvShow.voteAverage,
+                movieAndTvShow.voteCount
             )
         }
 
-        fun entityToMovie(movieEntity: MovieEntity): Movie {
-            return Movie(
-                movieEntity.id,
-                movieEntity.adult,
-                movieEntity.backdropPath,
-                movieEntity.originalLanguage,
-                movieEntity.originalTitle,
-                movieEntity.overview,
-                movieEntity.popularity,
-                movieEntity.posterPath,
-                movieEntity.releaseDate,
-                movieEntity.title,
-                movieEntity.video,
-                movieEntity.voteAverage,
-                movieEntity.voteCount
+        fun entityToMovie(movieAndTvShowEntity: MovieAndTvShow): MovieAndTvShow {
+            return MovieAndTvShow(
+                movieAndTvShowEntity.id,
+                movieAndTvShowEntity.adult,
+                movieAndTvShowEntity.backdropPath,
+                movieAndTvShowEntity.originalLanguage,
+                movieAndTvShowEntity.originalTitle,
+                movieAndTvShowEntity.overview,
+                movieAndTvShowEntity.popularity,
+                movieAndTvShowEntity.posterPath,
+                movieAndTvShowEntity.releaseDate,
+                movieAndTvShowEntity.title,
+                movieAndTvShowEntity.video,
+                movieAndTvShowEntity.voteAverage,
+                movieAndTvShowEntity.voteCount
             )
         }
     }

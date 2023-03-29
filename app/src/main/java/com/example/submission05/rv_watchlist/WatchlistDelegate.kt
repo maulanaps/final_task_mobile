@@ -1,7 +1,7 @@
 package com.example.submission05.rv_watchlist
 
-import com.example.submission03.model.Movie
+import com.example.submission03.model.MovieAndTvShow
 
 interface WatchlistDelegate {
-    fun onItemClicked(movie: Movie)
+    fun onItemClicked(movieAndTvShow: MovieAndTvShow)
 }

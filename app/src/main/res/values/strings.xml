@@ -38,4 +38,7 @@
     <string name="delete">Delete</string>
     <string name="known_for">Known For</string>
     <string name="biography">Biography</string>
+    <string name="no_comments_available">No Comments Available</string>
+    <string name="watchlist_is_empty">Watchlist is Empty</string>
+    <string name="movie_not_found">Movie Not Found</string>
 </resources>

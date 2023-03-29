@@ -7,18 +7,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.*
 import com.example.submission03.databinding.ActivityMainBinding
-import com.example.submission03.model.Movie
+import com.example.submission03.model.MovieAndTvShow
 import com.example.submission05.constants.Constants.Companion.AIRING_TODAY
 import com.example.submission05.constants.Constants.Companion.NOW_PLAYING
 import com.example.submission05.constants.Constants.Companion.ON_THE_AIR
 import com.example.submission05.constants.Constants.Companion.POPULAR
 import com.example.submission05.constants.Constants.Companion.TOP_RATED
 import com.example.submission05.constants.Constants.Companion.UPCOMING
-import com.example.submission05.db.DataConverter
 import com.example.submission05.db.watchlist.WatchListDatabase
 import com.example.submission05.rv_watchlist.WatchlistAdapter
 import com.example.submission05.rv_watchlist.WatchlistDelegate
@@ -88,12 +87,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // WATCHLIST SHOW ALL
-        binding.tvShowAllWatchList.setOnClickListener {
-            val intent = Intent(this@MainActivity, WatchlistAllActivity::class.java)
-            startActivity(intent)
-        }
-
         // WATCHLIST SETUP
         adapter = WatchlistAdapter()
         binding.rvWatchList.adapter = adapter
@@ -103,14 +96,29 @@ class MainActivity : AppCompatActivity() {
         val watchListDao = watchListDb.WatchListDao()
 
         watchListDao.getAll().observe(this@MainActivity) {watchlistMovies ->
-            val movieEntities = watchlistMovies.map { DataConverter.entityToMovie(it) }
-            adapter.setAdapter(movieEntities)
+            if (watchlistMovies.isNullOrEmpty()){
+                binding.tvWatchlistEmpty.visibility = VISIBLE
+                binding.rvWatchList.visibility = GONE
+                binding.tvShowAllWatchList.setOnClickListener {
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, "No Watchlist Available", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                adapter.setAdapter(watchlistMovies)
+                binding.tvWatchlistEmpty.visibility = GONE
+                binding.rvWatchList.visibility = VISIBLE
+                binding.tvShowAllWatchList.setOnClickListener {
+                    val intent = Intent(this@MainActivity, WatchlistAllActivity::class.java)
+                    startActivity(intent)
+                }
+            }
         }
 
         // WATCHLIST ITEM ON CLICK
         adapter.delegate = object : WatchlistDelegate {
-            override fun onItemClicked(movie: Movie) {
-                MovieDetailActivity.open(this@MainActivity, "Watch List Movie", movie)
+            override fun onItemClicked(movieAndTvShow: MovieAndTvShow) {
+                MovieDetailActivity.open(this@MainActivity, "Watch List Movie", movieAndTvShow)
             }
         }
     }

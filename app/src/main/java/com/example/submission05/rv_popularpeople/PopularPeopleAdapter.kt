@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.submission03.R
-import com.example.submission03.model.Movie
 import com.example.submission05.model.PopularPeople
-import com.example.submission05.model.PopularPeoples
 
 class PopularPeopleAdapter : RecyclerView.Adapter<PopularPeopleViewHolder>() {
 

@@ -1,13 +1,13 @@
 package com.example.submission03
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
 import com.example.submission03.databinding.ActivityPopularPeopleDetailBinding
-import com.example.submission03.model.Movie
+import com.example.submission03.model.MovieAndTvShow
 import com.example.submission05.api.PopularPeoplesApi
 import com.example.submission05.api.RetrofitHelper
 import com.example.submission05.dialog.ErrorDialog
@@ -15,6 +15,10 @@ import com.example.submission05.dialog.LoadingDialog
 import com.example.submission05.model.PopularPeopleDetail
 import com.example.submission05.rv_watchlist.WatchlistAdapter
 import com.example.submission05.rv_watchlist.WatchlistDelegate
+import com.faltenreich.skeletonlayout.Skeleton
+import com.faltenreich.skeletonlayout.SkeletonLayout
+import com.faltenreich.skeletonlayout.applySkeleton
+import com.faltenreich.skeletonlayout.createSkeleton
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,8 +27,9 @@ import java.time.Period
 
 private lateinit var binding: ActivityPopularPeopleDetailBinding
 private lateinit var adapter: WatchlistAdapter
-private lateinit var knownFor: ArrayList<Movie>
-
+private lateinit var knownFor: ArrayList<MovieAndTvShow>
+private lateinit var skeleton: Skeleton
+private lateinit var skeletonProfileImg: Skeleton
 
 class PopularPeopleDetailActivity : AppCompatActivity() {
 
@@ -38,29 +43,41 @@ class PopularPeopleDetailActivity : AppCompatActivity() {
         // TITLE
         supportActionBar?.title = "People Details"
 
-        // LOADING
-        loading.startLoading(this@PopularPeopleDetailActivity)
-
         // INTENT DATA
         val peopleId = intent.getIntExtra(PEOPLE_ID, 0)
         knownFor  = intent.getParcelableArrayListExtra(KNOWN_FOR)!!
 
+        // SWIPE REFRESH
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+            getApiPeopleDetail(peopleId)
+        }
+
         // SETUP RECYCLER VIEW
         adapter = WatchlistAdapter()
         binding.rvPeopleKnowFor.adapter = adapter
+
+        // START SKELETON
+        skeleton = binding.rvPeopleKnowFor.applySkeleton(R.layout.movie_item, 4)
+        skeletonProfileImg = findViewById(R.id.skeletonPeopleProfilePic)
 
         // GET DATA
         getApiPeopleDetail(peopleId)
 
         // OVERRIDE RV ONCLICK
         adapter.delegate = object : WatchlistDelegate {
-            override fun onItemClicked(movie: Movie) {
-                MovieDetailActivity.open(this@PopularPeopleDetailActivity, movie.title, movie)
+            override fun onItemClicked(movieAndTvShow: MovieAndTvShow) {
+                MovieDetailActivity.open(this@PopularPeopleDetailActivity, movieAndTvShow.title, movieAndTvShow)
             }
         }
     }
 
     private fun getApiPeopleDetail(peopleId: Int) {
+        // START LOADING
+        loading.startLoading(this@PopularPeopleDetailActivity)
+        skeleton.showSkeleton()
+        skeletonProfileImg.showSkeleton()
+
         val peopleDetailApi = RetrofitHelper.getInstance().create(PopularPeoplesApi::class.java)
         val call = peopleDetailApi.getPeopleDetail(peopleId)
 
@@ -87,6 +104,8 @@ class PopularPeopleDetailActivity : AppCompatActivity() {
                             .into(ivPeopleProfilePic)
 
                         adapter.setAdapter(knownFor.toList())
+                        skeleton.showOriginal()
+                        skeletonProfileImg.showOriginal()
                     }
                 }
                 loading.endLoading()
@@ -125,10 +144,9 @@ class PopularPeopleDetailActivity : AppCompatActivity() {
         fun open(
             activity: AppCompatActivity,
             peopleId: Int,
-            knownFor: ArrayList<Movie>
+            knownFor: ArrayList<MovieAndTvShow>
         ) {
             val intent = Intent(activity, PopularPeopleDetailActivity::class.java)
-//            intent.putExtra(KNOWN_FOR, knownFor)
             intent.putParcelableArrayListExtra(KNOWN_FOR, knownFor)
             intent.putExtra(PEOPLE_ID, peopleId)
             ActivityCompat.startActivity(activity, intent, null)

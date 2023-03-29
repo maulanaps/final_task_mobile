@@ -8,11 +8,9 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.submission03.databinding.ActivityTvShowListBinding
-import com.example.submission03.model.Movie
+import com.example.submission03.model.MovieAndTvShow
 import com.example.submission03.movie.MovieAdapter
 import com.example.submission03.movie.MovieDelegate
-import com.example.submission05.rv_tvshow.TvShowAdapter
-import com.example.submission05.rv_tvshow.TvShowDelegate
 import com.example.submission05.api.RetrofitHelper
 import com.example.submission05.api.TvShowsApi
 import com.example.submission05.constants.Constants.Companion.AIRING_TODAY
@@ -22,8 +20,6 @@ import com.example.submission05.constants.Constants.Companion.TOP_RATED
 import com.example.submission05.dialog.ErrorDialog
 import com.example.submission05.dialog.LoadingDialog
 import com.example.submission05.model.Movies
-import com.example.submission05.model.TvShow
-import com.example.submission05.model.TvShows
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.applySkeleton
 import retrofit2.Call
@@ -51,8 +47,15 @@ class TvShowListActivity : AppCompatActivity() {
         // title
         supportActionBar?.title = title
 
-        // start loading
-        loading.startLoading(this@TvShowListActivity)
+        // SWIPE REFRESH
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.swipeRefreshLayout.isRefreshing = false
+            Log.d("blah2", "onRefresh: dor")
+            getTvShowData(section!!)
+        }
+
+        // skeleton
+        skeleton = binding.rvTvShow.applySkeleton(R.layout.movie_item, 5)
 
         // setup rv and adapter
         val linearLayoutManager =
@@ -69,14 +72,18 @@ class TvShowListActivity : AppCompatActivity() {
         getTvShowData(section!!)
 
         adapter.delegate = object : MovieDelegate {
-            override fun onItemClicked(movie: Movie) {
-                MovieDetailActivity.open(this@TvShowListActivity, "Tv Show", movie)
-                println(movie)
+            override fun onItemClicked(movieAndTvShow: MovieAndTvShow) {
+                MovieDetailActivity.open(this@TvShowListActivity, "Tv Show", movieAndTvShow)
+                println(movieAndTvShow)
             }
         }
     }
 
     private fun getTvShowData (section: String) {
+        // start loading
+        skeleton.showSkeleton()
+        loading.startLoading(this@TvShowListActivity)
+
         val tvShowsApi = RetrofitHelper.getInstance().create(TvShowsApi::class.java)
         val call: Call<Movies> = when (section) {
             POPULAR -> tvShowsApi.getPopularTvShows()

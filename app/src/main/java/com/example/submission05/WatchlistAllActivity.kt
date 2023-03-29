@@ -5,8 +5,7 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.VERTICAL
 import com.example.submission03.databinding.ActivityWatchlistBinding
-import com.example.submission03.model.Movie
-import com.example.submission05.db.DataConverter
+import com.example.submission03.model.MovieAndTvShow
 import com.example.submission05.db.watchlist.WatchListDatabase
 import com.example.submission05.rv_watchlist_showAll.WatchlistShowAllAdapter
 import com.example.submission05.rv_watchlist_showAll.WatchlistShowAllDelegate
@@ -39,20 +38,18 @@ class WatchlistAllActivity : AppCompatActivity() {
             val watchlistDao = db.WatchListDao()
 
             watchlistDao.getAll().observe(this@WatchlistAllActivity) { moviesEntity ->
-                val movies = moviesEntity.map { DataConverter.entityToMovie(it) }
-                adapter.setAdapter(movies)
+                adapter.setAdapter(moviesEntity)
             }
 
             // delegate on click
             adapter.delegate = object : WatchlistShowAllDelegate {
-                override fun onItemClicked(movie: Movie) {
-                    MovieDetailActivity.open(this@WatchlistAllActivity, "Watch List Movie", movie)
+                override fun onItemClicked(movieAndTvShow: MovieAndTvShow) {
+                    MovieDetailActivity.open(this@WatchlistAllActivity, "Watch List Movie", movieAndTvShow)
                 }
 
-                override fun onDeleteBtnClicked(movie: Movie) {
+                override fun onDeleteBtnClicked(movieAndTvShow: MovieAndTvShow) {
                     CoroutineScope(Dispatchers.IO).launch {
-                        val movieEntity = DataConverter.movieToEntity(movie)
-                        watchlistDao.delete(movieEntity)
+                        watchlistDao.delete(movieAndTvShow)
                     }
                 }
             }

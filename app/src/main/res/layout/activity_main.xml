@@ -34,7 +34,7 @@
             android:background="@color/grey_10"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:paddingBottom="50dp"
+            android:paddingBottom="20dp"
             app:layout_constraintBottom_toTopOf="@id/footer"
             app:layout_constraintTop_toBottomOf="@id/imageView2"
             tools:layout_editor_absoluteX="-189dp">
@@ -522,6 +522,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tvWatchList" />
 
+            <TextView
+                android:id="@+id/tvWatchlistEmpty"
+                android:layout_width="match_parent"
+                android:layout_marginTop="20dp"
+                android:layout_height="80dp"
+                android:text="@string/watchlist_is_empty"
+                android:gravity="center"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/tvShowAllWatchList"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvWatchList"
                 android:layout_width="match_parent"
@@ -531,6 +541,7 @@
                 tools:listitem="@layout/watchlist_item"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="horizontal"
+                tools:visibility="gone"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

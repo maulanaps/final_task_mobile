@@ -3,12 +3,14 @@ package com.example.submission03
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.submission03.databinding.ActivityMovieListBinding
-import com.example.submission03.model.Movie
+import com.example.submission03.model.MovieAndTvShow
 import com.example.submission03.movie.MovieAdapter
 import com.example.submission03.movie.MovieDelegate
 import com.example.submission05.constants.Constants.Companion.NOW_PLAYING
@@ -40,13 +42,17 @@ class MovieListActivity : AppCompatActivity() {
         binding = ActivityMovieListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // start loading
-        loading.startLoading(this@MovieListActivity)
-
         // get intent data
         val title = intent.getStringExtra(PAGE_TITLE)
         val query = intent.getStringExtra(QUERY)
         val section = intent.getStringExtra(SECTION)
+
+        // SWIPE REFRESH
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.swipeRefreshLayout.isRefreshing = false
+            Log.d("blah2", "onRefresh: dor")
+            getApiMovies(query, section)
+        }
 
         // action bar
         supportActionBar?.title = title
@@ -59,19 +65,22 @@ class MovieListActivity : AppCompatActivity() {
 
         // skeleton
         skeleton = binding.rvMovieList.applySkeleton(R.layout.movie_item, 5)
-        skeleton.showSkeleton()
 
         // get movies
         getApiMovies(query, section)
 
         adapter.delegate = object : MovieDelegate {
-            override fun onItemClicked(movie: Movie) {
-                MovieDetailActivity.open(this@MovieListActivity, title, movie)
+            override fun onItemClicked(movieAndTvShow: MovieAndTvShow) {
+                MovieDetailActivity.open(this@MovieListActivity, title, movieAndTvShow)
             }
         }
     }
 
     private fun getApiMovies(query: String?, section: String?) {
+        // start loading
+        loading.startLoading(this@MovieListActivity)
+        skeleton.showSkeleton()
+
         val moviesApi = RetrofitHelper.getInstance().create(MoviesApi::class.java)
         val call: Call<Movies>
         if (query != null) {
@@ -99,6 +108,14 @@ class MovieListActivity : AppCompatActivity() {
                     list?.let {
                         Log.d("blah", "onResponse: ${list.size}")
                         adapter.setAdapter(it)
+                    }
+
+                    if (list.isNullOrEmpty()) {
+                        binding.tvMovieNotFound.visibility = VISIBLE
+                        binding.rvMovieList.visibility = GONE
+                    } else {
+                        binding.tvMovieNotFound.visibility = GONE
+                        binding.rvMovieList.visibility = VISIBLE
                     }
                 }
                 Log.d("foo", "after success: ")

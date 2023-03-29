@@ -4,10 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.submission03.model.Movie
-import com.example.submission03.model.MovieEntity
+import com.example.submission03.model.MovieAndTvShow
 
-@Database(entities = [MovieEntity::class], version = 1)
+@Database(entities = [MovieAndTvShow::class], version = 1)
 abstract class WatchListDatabase : RoomDatabase() {
     abstract fun WatchListDao(): WatchListDao
 

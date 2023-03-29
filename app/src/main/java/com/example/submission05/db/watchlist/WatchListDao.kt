@@ -5,20 +5,19 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.submission03.model.Movie
-import com.example.submission03.model.MovieEntity
+import com.example.submission03.model.MovieAndTvShow
 
 @Dao
 interface WatchListDao {
     @Query("SELECT * FROM watchlist_table")
-    fun getAll() : LiveData<List<MovieEntity>>
+    fun getAll() : LiveData<List<MovieAndTvShow>>
 
     @Query("SELECT * FROM watchlist_table WHERE id = :id")
-    fun getMovieById(id: String) : LiveData<List<MovieEntity>>
+    fun getMovieById(id: String) : LiveData<List<MovieAndTvShow>>
 
     @Insert
-    fun insert(movie: MovieEntity)
+    fun insert(movieAndTvShow: MovieAndTvShow)
 
     @Delete
-    fun delete(movie: MovieEntity)
+    fun delete(movieAndTvShow: MovieAndTvShow)
 }

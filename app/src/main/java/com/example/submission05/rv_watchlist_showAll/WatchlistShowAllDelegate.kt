@@ -1,8 +1,8 @@
 package com.example.submission05.rv_watchlist_showAll
 
-import com.example.submission03.model.Movie
+import com.example.submission03.model.MovieAndTvShow
 
 interface WatchlistShowAllDelegate {
-    fun onItemClicked(movie: Movie)
-    fun onDeleteBtnClicked(movie: Movie)
+    fun onItemClicked(movieAndTvShow: MovieAndTvShow)
+    fun onDeleteBtnClicked(movieAndTvShow: MovieAndTvShow)
 }

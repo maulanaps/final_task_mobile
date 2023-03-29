@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.submission03.R
-import com.example.submission03.model.Movie
+import com.example.submission03.model.MovieAndTvShow
 
 class MovieAdapter : RecyclerView.Adapter<MovieViewHolder>() {
 
-    private val list: MutableList<Movie> = mutableListOf()
+    private val list: MutableList<MovieAndTvShow> = mutableListOf()
     var delegate: MovieDelegate? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
@@ -43,10 +43,10 @@ class MovieAdapter : RecyclerView.Adapter<MovieViewHolder>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setAdapter(movies: List<Movie>) {
+    fun setAdapter(movieAndTvShows: List<MovieAndTvShow>) {
         list.clear()
-        list.addAll(movies)
-        Log.d("blah", "setAdapter: ${movies.size}")
+        list.addAll(movieAndTvShows)
+        Log.d("blah", "setAdapter: ${movieAndTvShows.size}")
         notifyDataSetChanged()
     }
 }

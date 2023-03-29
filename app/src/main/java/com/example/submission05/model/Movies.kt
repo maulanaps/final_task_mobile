@@ -1,13 +1,12 @@
 package com.example.submission05.model
 
-import com.example.submission03.R
-import com.example.submission03.model.Movie
+import com.example.submission03.model.MovieAndTvShow
 import com.google.gson.annotations.SerializedName
 
 data class Movies (
 
     @SerializedName("page"          ) var page         : Int?               = null,
-    @SerializedName("results"       ) var results      : List<Movie> = emptyList(),
+    @SerializedName("results"       ) var results      : List<MovieAndTvShow> = emptyList(),
     @SerializedName("total_pages"   ) var totalPages   : Int?               = null,
     @SerializedName("total_results" ) var totalResults : Int?               = null
 

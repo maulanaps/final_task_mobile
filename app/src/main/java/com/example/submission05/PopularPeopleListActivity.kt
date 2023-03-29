@@ -19,7 +19,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
 class PopularPeopleListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPopularPeopleListBinding
@@ -42,12 +41,14 @@ class PopularPeopleListActivity : AppCompatActivity() {
         adapter = PopularPeopleAdapter()
         binding.rvPopularPeopleList.adapter = adapter
 
-        // start loading
-        loading.startLoading(this@PopularPeopleListActivity)
-
         // skeleton
         skeleton = binding.rvPopularPeopleList.applySkeleton(R.layout.popular_people_item, 12)
-        skeleton.showSkeleton()
+
+        // SWIPE REFRESH
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.swipeRefreshLayout.isRefreshing = false
+            getApiPopularPeoples()
+        }
 
         // get popular peoples api
         getApiPopularPeoples()
@@ -63,6 +64,10 @@ class PopularPeopleListActivity : AppCompatActivity() {
 
 
     private fun getApiPopularPeoples() {
+        // start loading
+        loading.startLoading(this@PopularPeopleListActivity)
+        skeleton.showSkeleton()
+
         val popularPeoplesApi = RetrofitHelper.getInstance().create(PopularPeoplesApi::class.java)
         val call: Call<PopularPeoples> = popularPeoplesApi.getPopularPeoples()
 
