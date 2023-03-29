@@ -65,7 +65,6 @@ class PopularPeopleDetailActivity : AppCompatActivity() {
         val call = peopleDetailApi.getPeopleDetail(peopleId)
 
         call.enqueue(object : Callback<PopularPeopleDetail> {
-            @SuppressLint("SetTextI18n")
             override fun onResponse(
                 call: Call<PopularPeopleDetail>,
                 response: Response<PopularPeopleDetail>
@@ -73,10 +72,10 @@ class PopularPeopleDetailActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     binding.apply {
                         val peopleDetail = response.body()
+                        val genderAndRole = getGender(peopleDetail?.gender!!) + ", ${peopleDetail.knownForDepartment}"
 
-                        tvPeopleName.text = peopleDetail?.name
-                        tvGenderAndRole.text =
-                            getGender(peopleDetail?.gender!!) + ", ${peopleDetail.knownForDepartment}"
+                        tvPeopleName.text = peopleDetail.name
+                        tvGenderAndRole.text = genderAndRole
                         tvBirthday.text = calcAge(peopleDetail.birthday!!, peopleDetail.deathday)
                         tvBirthplace.text = peopleDetail.placeOfBirth
                         tvKnownAs.text = peopleDetail.alsoKnownAs?.joinToString()

@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -150,6 +151,9 @@ class MovieDetailActivity : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     val movieEntity = DataConverter.movieToEntity(movieDetail)
                     watchListDao.insert(movieEntity)
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, "Added to watch list", Toast.LENGTH_SHORT).show()
+                    }
                     Log.d("blah", "addWatchList: movie ${movieDetail.title} saved to watch list")
                 }
             }
@@ -158,6 +162,9 @@ class MovieDetailActivity : AppCompatActivity() {
                 CoroutineScope(Dispatchers.IO).launch {
                     val movieEntity = DataConverter.movieToEntity(movieDetail)
                     watchListDao.delete(movieEntity)
+                    runOnUiThread {
+                        Toast.makeText(applicationContext, "Removed from watch list", Toast.LENGTH_SHORT).show()
+                    }
                     Log.d("blah", "removeWatchList: movie ${movieDetail.title} removed to watch list")
                 }
             }

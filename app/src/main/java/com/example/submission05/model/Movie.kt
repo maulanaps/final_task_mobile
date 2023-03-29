@@ -23,6 +23,7 @@ data class Movie (
     @SerializedName("title"             ) @ColumnInfo("title"             ) var title            : String?        = null,
     @SerializedName("video"             ) @ColumnInfo("video"             ) var video            : Boolean?       = null,
     @SerializedName("vote_average"      ) @ColumnInfo("vote_average"      ) var voteAverage      : Double?        = null,
-    @SerializedName("vote_count"        ) @ColumnInfo("vote_count"        ) var voteCount        : Int?           = null
+    @SerializedName("vote_count"        ) @ColumnInfo("vote_count"        ) var voteCount        : Int?           = null,
+    @SerializedName("media_type"        ) @ColumnInfo("media_type"        ) var mediaType        : String?        = null
 
 ) : Parcelable

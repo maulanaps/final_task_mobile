@@ -29,7 +29,7 @@ class WatchlistAdapter : RecyclerView.Adapter<WatchlistViewHolder>() {
             .load("https://image.tmdb.org/t/p/original" + list[position].posterPath)
             .placeholder(R.drawable.image_placeholder)
             .into(holder.poster)
-        holder.title.text = list[position].title
+        holder.title.text = list[position].originalTitle
 
         // on click
         holder.itemView.setOnClickListener {

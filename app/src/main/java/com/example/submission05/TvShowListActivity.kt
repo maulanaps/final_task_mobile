@@ -8,6 +8,9 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.submission03.databinding.ActivityTvShowListBinding
+import com.example.submission03.model.Movie
+import com.example.submission03.movie.MovieAdapter
+import com.example.submission03.movie.MovieDelegate
 import com.example.submission05.rv_tvshow.TvShowAdapter
 import com.example.submission05.rv_tvshow.TvShowDelegate
 import com.example.submission05.api.RetrofitHelper
@@ -18,6 +21,7 @@ import com.example.submission05.constants.Constants.Companion.POPULAR
 import com.example.submission05.constants.Constants.Companion.TOP_RATED
 import com.example.submission05.dialog.ErrorDialog
 import com.example.submission05.dialog.LoadingDialog
+import com.example.submission05.model.Movies
 import com.example.submission05.model.TvShow
 import com.example.submission05.model.TvShows
 import com.faltenreich.skeletonlayout.Skeleton
@@ -28,7 +32,7 @@ import retrofit2.Response
 
 class TvShowListActivity : AppCompatActivity() {
 
-    private lateinit var adapter: TvShowAdapter
+    private lateinit var adapter: MovieAdapter
     private lateinit var binding: ActivityTvShowListBinding
     private lateinit var skeleton: Skeleton
 
@@ -53,7 +57,7 @@ class TvShowListActivity : AppCompatActivity() {
         // setup rv and adapter
         val linearLayoutManager =
             LinearLayoutManager(this@TvShowListActivity, RecyclerView.VERTICAL, false)
-        adapter = TvShowAdapter()
+        adapter = MovieAdapter()
         binding.rvTvShow.layoutManager = linearLayoutManager
         binding.rvTvShow.adapter = adapter
 
@@ -64,16 +68,17 @@ class TvShowListActivity : AppCompatActivity() {
         // get data
         getTvShowData(section!!)
 
-        adapter.delegate = object : TvShowDelegate {
-            override fun onItemClicked(tvShow: TvShow) {
-                println(tvShow)
+        adapter.delegate = object : MovieDelegate {
+            override fun onItemClicked(movie: Movie) {
+                MovieDetailActivity.open(this@TvShowListActivity, "Tv Show", movie)
+                println(movie)
             }
         }
     }
 
     private fun getTvShowData (section: String) {
         val tvShowsApi = RetrofitHelper.getInstance().create(TvShowsApi::class.java)
-        val call: Call<TvShows> = when (section) {
+        val call: Call<Movies> = when (section) {
             POPULAR -> tvShowsApi.getPopularTvShows()
             TOP_RATED -> tvShowsApi.getTopRatedShows()
             ON_THE_AIR -> tvShowsApi.getOnTheAirTvShows()
@@ -81,8 +86,8 @@ class TvShowListActivity : AppCompatActivity() {
             else -> tvShowsApi.getPopularTvShows()
         }
 
-        call.enqueue(object : Callback<TvShows> {
-            override fun onResponse(call: Call<TvShows>, response: Response<TvShows>) {
+        call.enqueue(object : Callback<Movies> {
+            override fun onResponse(call: Call<Movies>, response: Response<Movies>) {
                 if (response.isSuccessful) {
                     val list = response.body()?.results
                     Log.d("blah", "onResponse: $list")
@@ -95,7 +100,7 @@ class TvShowListActivity : AppCompatActivity() {
                 loading.endLoading()
             }
 
-            override fun onFailure(call: Call<TvShows>, t: Throwable) {
+            override fun onFailure(call: Call<Movies>, t: Throwable) {
                 Log.d("foo", "onFailure: ${t.message}")
                 loading.endLoading()
                 ErrorDialog.showError(this@TvShowListActivity, "Failed to load data")

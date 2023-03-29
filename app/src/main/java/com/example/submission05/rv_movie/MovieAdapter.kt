@@ -28,10 +28,8 @@ class MovieAdapter : RecyclerView.Adapter<MovieViewHolder>() {
             .load("https://image.tmdb.org/t/p/original" + list[position].posterPath)
             .placeholder(R.drawable.image_placeholder)
             .into(holder.poster)
-        val item = list[position]
-//        Log.d("foo", "onBindViewHolder: $item")
 
-        holder.title.text = list[position].title
+        holder.title.text = list[position].originalTitle
         holder.rating.text = "Rating: " + list[position].voteAverage.toString()
         holder.overview.text = list[position].overview
         holder.itemView.setOnClickListener {

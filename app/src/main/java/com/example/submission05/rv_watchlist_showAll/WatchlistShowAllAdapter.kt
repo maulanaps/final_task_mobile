@@ -28,7 +28,7 @@ class WatchlistShowAllAdapter : RecyclerView.Adapter<WatchlistShowAllViewHolder>
             .placeholder(R.drawable.image_placeholder)
             .into(holder.poster)
 
-        holder.title.text = list[position].title
+        holder.title.text = list[position].originalTitle
 
         holder.deleteBtn.setOnClickListener {
             delegate?.onDeleteBtnClicked(list[position])
