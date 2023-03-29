@@ -17,24 +17,47 @@ class LoginActivity : AppCompatActivity() {
 
         binding.apply {
             btnLogin.setOnClickListener {
-                val username = edtUsername.text.toString()
-                val password = edtPassword.text.toString()
-
                 val sharedPref = getSharedPreferences("LOGIN", MODE_PRIVATE)
                 val editor = sharedPref.edit()
 
+                val username = edtUsername.text.toString()
+                val password = edtPassword.text.toString()
+
+                val usernameSaved = sharedPref.getString("username", null)
+                val passwordSaved = sharedPref.getString("password", null)
+
+                // username / password empty
                 if (username.isEmpty() || password.isEmpty()) {
                     Snackbar.make(constraintLayout, "Please fill the username and password", 2000)
                         .show()
-                } else {
-                    editor.apply {
-                        putString("username", username)
-                        putString("password", password)
-                        putBoolean("login", true)
+                }
 
+                // username match
+                else if (username == usernameSaved) {
+                    // password match (login)
+                    if (password == passwordSaved) {
+                        editor.putBoolean("isLoggedIn", true)
                         editor.apply()
+
+                        // redirect to main activity
+                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                    // password mismatch
+                    else {
+                        Snackbar.make(constraintLayout, "Wrong password", 2000)
+                            .show()
                     }
 
+                // regis new user
+                } else {
+                    editor.putString("username", username)
+                    editor.putString("password", password)
+                    editor.putBoolean("isLoggedIn", true)
+                    editor.apply()
+
+                    // redirect to main activity
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
                     startActivity(intent)
                     finish()

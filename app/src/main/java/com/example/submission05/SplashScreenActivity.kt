@@ -16,7 +16,7 @@ class SplashScreenActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             val sharedPref = getSharedPreferences("LOGIN", MODE_PRIVATE)
 
-            val login = sharedPref.getBoolean("login", false)
+            val login = sharedPref.getBoolean("isLoggedIn", false)
 
             val intent = if (login) {
                 Intent(this@SplashScreenActivity, MainActivity::class.java)

@@ -146,9 +146,10 @@ class MainActivity : AppCompatActivity() {
     private fun logout() {
         // delete shared preference login data
         val sharedPref = getSharedPreferences("LOGIN", MODE_PRIVATE)
-        sharedPref.edit().clear().apply()
+        sharedPref.edit().putBoolean("isLoggedIn", false).apply()
 
         // redirect to login activity
         LoginActivity.open(this@MainActivity)
+        finish()
     }
 }
