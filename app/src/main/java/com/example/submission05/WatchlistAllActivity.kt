@@ -25,7 +25,7 @@ class WatchlistAllActivity : AppCompatActivity() {
         binding = ActivityWatchlistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.title = "Movies Watch List"
+        supportActionBar?.title = "Watch List Movies"
 
         binding.apply {
             // rv setup
@@ -46,7 +46,7 @@ class WatchlistAllActivity : AppCompatActivity() {
             // delegate on click
             adapter.delegate = object : WatchlistShowAllDelegate {
                 override fun onItemClicked(movie: Movie) {
-                    MovieDetailActivity.open(this@WatchlistAllActivity, "Watch List Movies", movie)
+                    MovieDetailActivity.open(this@WatchlistAllActivity, "Watch List Movie", movie)
                 }
 
                 override fun onDeleteBtnClicked(movie: Movie) {

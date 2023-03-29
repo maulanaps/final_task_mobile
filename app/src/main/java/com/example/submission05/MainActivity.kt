@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         // WATCHLIST ITEM ON CLICK
         adapter.delegate = object : WatchlistDelegate {
             override fun onItemClicked(movie: Movie) {
-                MovieDetailActivity.open(this@MainActivity, "Your Watch List", movie)
+                MovieDetailActivity.open(this@MainActivity, "Watch List Movie", movie)
             }
         }
     }

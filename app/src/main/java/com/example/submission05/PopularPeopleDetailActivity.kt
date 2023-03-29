@@ -5,17 +5,16 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
-import androidx.paging.LoadState
 import com.bumptech.glide.Glide
 import com.example.submission03.databinding.ActivityPopularPeopleDetailBinding
-import com.example.submission03.movie.MovieAdapter
-import com.example.submission03.movie.PopularPeopleAdapter
+import com.example.submission03.model.Movie
 import com.example.submission05.api.PopularPeoplesApi
 import com.example.submission05.api.RetrofitHelper
 import com.example.submission05.dialog.ErrorDialog
 import com.example.submission05.dialog.LoadingDialog
 import com.example.submission05.model.PopularPeopleDetail
-import com.example.submission05.model.PopularPeopleKnownFor
+import com.example.submission05.rv_watchlist.WatchlistAdapter
+import com.example.submission05.rv_watchlist.WatchlistDelegate
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,7 +22,9 @@ import java.time.LocalDate
 import java.time.Period
 
 private lateinit var binding: ActivityPopularPeopleDetailBinding
-private lateinit var adapter: MovieAdapter
+private lateinit var adapter: WatchlistAdapter
+private lateinit var knownFor: ArrayList<Movie>
+
 
 class PopularPeopleDetailActivity : AppCompatActivity() {
 
@@ -42,13 +43,21 @@ class PopularPeopleDetailActivity : AppCompatActivity() {
 
         // INTENT DATA
         val peopleId = intent.getIntExtra(PEOPLE_ID, 0)
-        val knownFor: ArrayList<PopularPeopleKnownFor>? = intent.getParcelableExtra(KNOWN_FOR)
+        knownFor  = intent.getParcelableArrayListExtra(KNOWN_FOR)!!
+
+        // SETUP RECYCLER VIEW
+        adapter = WatchlistAdapter()
+        binding.rvPeopleKnowFor.adapter = adapter
 
         // GET DATA
         getApiPeopleDetail(peopleId)
 
-        // SETUP RECYCLER VIEW
-//        adapter =
+        // OVERRIDE RV ONCLICK
+        adapter.delegate = object : WatchlistDelegate {
+            override fun onItemClicked(movie: Movie) {
+                MovieDetailActivity.open(this@PopularPeopleDetailActivity, movie.title, movie)
+            }
+        }
     }
 
     private fun getApiPeopleDetail(peopleId: Int) {
@@ -77,6 +86,8 @@ class PopularPeopleDetailActivity : AppCompatActivity() {
                             .load("https://image.tmdb.org/t/p/original" + peopleDetail?.profilePath)
                             .placeholder(R.drawable.image_placeholder)
                             .into(ivPeopleProfilePic)
+
+                        adapter.setAdapter(knownFor.toList())
                     }
                 }
                 loading.endLoading()
@@ -115,10 +126,11 @@ class PopularPeopleDetailActivity : AppCompatActivity() {
         fun open(
             activity: AppCompatActivity,
             peopleId: Int,
-            knownFor: ArrayList<PopularPeopleKnownFor>
+            knownFor: ArrayList<Movie>
         ) {
             val intent = Intent(activity, PopularPeopleDetailActivity::class.java)
-            intent.putExtra(KNOWN_FOR, knownFor)
+//            intent.putExtra(KNOWN_FOR, knownFor)
+            intent.putParcelableArrayListExtra(KNOWN_FOR, knownFor)
             intent.putExtra(PEOPLE_ID, peopleId)
             ActivityCompat.startActivity(activity, intent, null)
         }

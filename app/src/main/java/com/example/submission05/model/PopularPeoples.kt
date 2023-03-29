@@ -1,5 +1,6 @@
 package com.example.submission05.model
 
+import com.example.submission03.model.Movie
 import com.google.gson.annotations.SerializedName
 
 data class PopularPeoples(

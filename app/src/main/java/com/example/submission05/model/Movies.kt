@@ -5,6 +5,7 @@ import com.example.submission03.model.Movie
 import com.google.gson.annotations.SerializedName
 
 data class Movies (
+
     @SerializedName("page"          ) var page         : Int?               = null,
     @SerializedName("results"       ) var results      : List<Movie> = emptyList(),
     @SerializedName("total_pages"   ) var totalPages   : Int?               = null,
