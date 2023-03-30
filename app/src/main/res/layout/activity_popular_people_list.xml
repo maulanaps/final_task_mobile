@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/bottom"
         android:padding="8dp"
-        tools:context="com.example.submission03.PopularPeopleListActivity">
+        tools:context="com.example.submission03.com.example.submission05.ui.list_popular_people.PopularPeopleListActivity">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvPopularPeopleList"

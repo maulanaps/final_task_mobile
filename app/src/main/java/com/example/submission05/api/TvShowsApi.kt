@@ -1,7 +1,7 @@
 package com.example.submission05.api
 
-import com.example.submission05.model.Movies
-import com.example.submission05.model.TvShows
+import com.example.submission05.data.model.Movies
+import com.example.submission05.data.model.TvShows
 import retrofit2.Call
 import retrofit2.http.GET
 

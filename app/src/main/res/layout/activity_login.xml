@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bottom"
-    tools:context="com.example.submission03.LoginActivity"
+    tools:context="com.example.submission03.com.example.submission05.ui.login.LoginActivity"
     android:id="@+id/constraintLayout">
 
 
