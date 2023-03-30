@@ -1,7 +1,6 @@
-package com.example.submission05.ui.list_movie_tvshow_detail
+package com.example.submission05.ui.detail_movie_tvshow
 
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.submission03.R

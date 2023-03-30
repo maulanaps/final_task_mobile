@@ -1,4 +1,4 @@
-package com.example.submission05.ui.list_movie_tvshow_detail
+package com.example.submission05.ui.detail_movie_tvshow
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.submission03.R
-import com.example.submission05.data.model.CommentEntity
+import com.example.submission05.data.entity.CommentEntity
 
 class CommentAdapter : RecyclerView.Adapter<CommentViewHolder>() {
 

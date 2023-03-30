@@ -1,4 +1,4 @@
-package com.example.submission05.data.model
+package com.example.submission05.data.entity
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo

@@ -7,19 +7,25 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import com.example.submission03.databinding.ActivityCommentFormBinding
 import com.example.submission05.constant.Constants.Companion.EDIT_COMMENT
 import com.example.submission05.constant.Constants.Companion.WRITE_COMMENT
 import com.example.submission05.data.room.comment.CommentDatabase
-import com.example.submission05.data.model.CommentEntity
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.submission05.data.entity.CommentEntity
 
-private lateinit var binding: ActivityCommentFormBinding
 
 class CommentFormActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityCommentFormBinding
+
+    // VIEW MODEL
+    private val viewModel: CommentViewModel by viewModels {
+        val commentDao = CommentDatabase.getInstance(this).CommentDao()
+        CommentViewModel.provideFactory(commentDao, this)
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +39,6 @@ class CommentFormActivity : AppCompatActivity() {
 
         binding.apply {
 
-            val commentDb = CommentDatabase.getInstance(this@CommentFormActivity)
-            val commentDao = commentDb.CommentDao()
             Log.d("coms", "onCreate: mode = $mode")
             if (mode == WRITE_COMMENT) {
                 btnSubmitComment.text = "Submit"
@@ -44,9 +48,7 @@ class CommentFormActivity : AppCompatActivity() {
                     val commentWriter = etWriterName.text.toString()
                     val commentContent = etCommentContent.text.toString()
                     val newComment = CommentEntity(movieId = movieId, writer= commentWriter, content= commentContent)
-                    CoroutineScope(Dispatchers.IO).launch {
-                        commentDao.insert(newComment)
-                    }
+                    viewModel.insertComment(newComment)
                     finish()
                 }
             }
@@ -60,16 +62,12 @@ class CommentFormActivity : AppCompatActivity() {
                 btnSubmitComment.setOnClickListener {
                     comment.writer = etWriterName.text.toString()
                     comment.content = etCommentContent.text.toString()
-                    CoroutineScope(Dispatchers.IO).launch {
-                        commentDao.update(comment)
-                    }
+                    viewModel.updateComment(comment)
                     finish()
                 }
 
                 btnDeleteComment.setOnClickListener {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        commentDao.delete(comment)
-                    }
+                    viewModel.deleteComment(comment)
                     finish()
                 }
             }

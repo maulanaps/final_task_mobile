@@ -3,8 +3,10 @@ package com.example.submission05.ui.list_popular_people
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.submission05.ui.list_popular_people_detail.PopularPeopleDetailActivity
+import com.example.submission05.ui.detail_popular_people.PopularPeopleDetailActivity
 import com.example.submission03.R
 import com.example.submission03.databinding.ActivityPopularPeopleListBinding
 import com.example.submission05.api.PopularPeoplesApi
@@ -24,9 +26,10 @@ class PopularPeopleListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPopularPeopleListBinding
     private lateinit var adapter: PopularPeopleAdapter
     private lateinit var skeleton: Skeleton
+    private val viewModel: PopularPeopleViewModel by viewModels()
 
     //loading dialog
-    val loading = LoadingDialog()
+    private val loading = LoadingDialog()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +50,35 @@ class PopularPeopleListActivity : AppCompatActivity() {
         // SWIPE REFRESH
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = false
-            getApiPopularPeoples()
+            viewModel.popularPeopleApiCall()
         }
 
-        // get popular peoples api
-        getApiPopularPeoples()
+        // GET MOVIES
+        // api call
+        viewModel.popularPeopleApiCall()
+        // loading
+        viewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                loading.startLoading(this)
+                skeleton.showSkeleton()
+            } else {
+                loading.endLoading()
+                skeleton.showOriginal()
+            }
+        }
+        // error
+        viewModel.isError.observe(this) { isError ->
+            if (isError) {
+                loading.endLoading()
+                ErrorDialog.showError(this@PopularPeopleListActivity, "Failed to load data")
+            }
+        }
+        // get data
+        viewModel.popularPeopleList.observe(this) { movies ->
+            adapter.setAdapter(movies)
+            skeleton.showOriginal()
+            loading.endLoading()
+        }
 
         // set adapter
         adapter.delegate = object : PopularPeopleDelegate {
@@ -66,33 +93,4 @@ class PopularPeopleListActivity : AppCompatActivity() {
         }
     }
 
-
-    private fun getApiPopularPeoples() {
-        // start loading
-        loading.startLoading(this@PopularPeopleListActivity)
-        skeleton.showSkeleton()
-
-        val popularPeoplesApi = RetrofitHelper.getInstance().create(PopularPeoplesApi::class.java)
-        val call: Call<PopularPeoples> = popularPeoplesApi.getPopularPeoples()
-
-        call.enqueue(object : Callback<PopularPeoples> {
-            override fun onResponse(call: Call<PopularPeoples>, response: Response<PopularPeoples>) {
-                if (response.isSuccessful) {
-                    val list = response.body()?.results
-                    list?.let {
-                        Log.d("foo", "onResponse: ${list.size}")
-                        adapter.setAdapter(it)
-                        skeleton.showOriginal()
-                        loading.endLoading()
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<PopularPeoples>, t: Throwable) {
-                Log.d("foo", "onFailure: ${t.message}")
-                ErrorDialog.showError(this@PopularPeopleListActivity, "Failed to load data")
-            }
-
-        })
-    }
 }

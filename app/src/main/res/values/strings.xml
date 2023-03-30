@@ -41,4 +41,5 @@
     <string name="no_comments_available">No Comments Available</string>
     <string name="watchlist_is_empty">Watchlist is Empty</string>
     <string name="movie_not_found">Movie Not Found</string>
+    <string name="remove_from_watchlist">Remove from watchlist</string>
 </resources>

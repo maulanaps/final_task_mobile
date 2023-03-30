@@ -1,11 +1,11 @@
-package com.example.submission05.ui.list_movie_tvshow_detail
+package com.example.submission05.ui.detail_movie_tvshow
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,27 +24,34 @@ import com.example.submission05.constant.Constants.Companion.WRITE_COMMENT
 import com.example.submission05.utils.dialog.ErrorDialog
 import com.example.submission05.data.room.comment.CommentDatabase
 import com.example.submission05.data.room.watchlist.WatchListDatabase
-import com.example.submission05.data.model.CommentEntity
+import com.example.submission05.data.entity.CommentEntity
 import com.faltenreich.skeletonlayout.Skeleton
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
-private lateinit var binding: ActivityMovieDetailBinding
-private lateinit var adapter: CommentAdapter
-private lateinit var skeletonBackdrop: Skeleton
-private lateinit var skeletonPoster: Skeleton
 
 class MovieDetailActivity : AppCompatActivity() {
-    @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
+
+    private lateinit var binding: ActivityMovieDetailBinding
+    private lateinit var adapter: CommentAdapter
+    private lateinit var skeletonBackdrop: Skeleton
+    private lateinit var skeletonPoster: Skeleton
+
+    // VIEW MODEL
+    private val viewModel: MovieDetailViewModel by viewModels {
+        val movieId = intent.getStringExtra(MOVIE_ID)
+        val watchListDao = WatchListDatabase.getInstance(this).WatchListDao()
+        val commentDao = CommentDatabase.getInstance(this).CommentDao()
+        MovieDetailViewModel.provideFactory(watchListDao, commentDao, movieId!!, this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMovieDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // EXTRAS
-        val movieAndTvShowDetail = intent.getParcelableExtra<MovieAndTvShow>(MOVIE_DETAIL) as MovieAndTvShow
+        val movieAndTvShowDetail =
+            intent.getParcelableExtra<MovieAndTvShow>(MOVIE_DETAIL) as MovieAndTvShow
         val title = intent.getStringExtra(PAGE_TITLE)
+
         supportActionBar?.title = title
 
         // RV AND ADAPTER
@@ -69,50 +76,14 @@ class MovieDetailActivity : AppCompatActivity() {
 
         // GET DATABASE DATA
         binding.apply {
+            val detailRatingStr = "⭐ ${movieAndTvShowDetail.voteAverage}"
             detailTitle.text = movieAndTvShowDetail.title
             detailReleaseDate.text = movieAndTvShowDetail.releaseDate
-            detailRating.text = "⭐ ${movieAndTvShowDetail.voteAverage}"
+            detailRating.text = detailRatingStr
             detailOverview.text = movieAndTvShowDetail.overview
 
-            // watchlist db
-            val watchListDb = WatchListDatabase.getInstance(this@MovieDetailActivity)
-            val watchListDao = watchListDb.WatchListDao()
-            watchListDao
-                .getMovieById(movieAndTvShowDetail.id.toString())
-                .observe(this@MovieDetailActivity) {
-                    if (it.isEmpty()) {
-                        // add to watchlist
-                        tvAddRemoveWatchList.text = "Add to Watchlist"
-                        tvAddRemoveWatchList.setOnClickListener {
-                            CoroutineScope(Dispatchers.IO).launch {
-                                watchListDao.insert(movieAndTvShowDetail)
-                                runOnUiThread {
-                                    Toast.makeText(applicationContext, "Added to watch list", Toast.LENGTH_SHORT).show()
-                                }
-                                Log.d("blah", "addWatchList: movie ${movieAndTvShowDetail.title} saved to watch list")
-                            }
-                        }
-
-                    } else {
-                        //remove from watchlist
-                        tvAddRemoveWatchList.text = "Remove from watchlist"
-                        tvAddRemoveWatchList.setOnClickListener {
-                            CoroutineScope(Dispatchers.IO).launch {
-                                watchListDao.delete(movieAndTvShowDetail)
-                                runOnUiThread {
-                                    Toast.makeText(applicationContext, "Removed from watch list", Toast.LENGTH_SHORT).show()
-                                }
-                                Log.d("blah", "removeWatchList: movie ${movieAndTvShowDetail.title} removed to watch list")
-                            }
-                        }
-                    }
-                }
-
             // comment db
-            val commentDb = CommentDatabase.getInstance(this@MovieDetailActivity)
-            val commentDao = commentDb.CommentDao()
-            commentDao
-                .getCommentsByMovieId(movieAndTvShowDetail.id.toString())
+            viewModel.comments
                 .observe(this@MovieDetailActivity) {
                     adapter.setAdapter(it)
 
@@ -126,6 +97,40 @@ class MovieDetailActivity : AppCompatActivity() {
                     }
                 }
 
+            // watchlist db
+            viewModel.movieById
+                .observe(this@MovieDetailActivity) {
+                    if (it.isEmpty()) {
+                        // add to watchlist
+                        tvAddRemoveWatchList.text = "Add to Watchlist"
+                        tvAddRemoveWatchList.setOnClickListener {
+                            viewModel.insertMovie(movieAndTvShowDetail)
+                            runOnUiThread {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Added to watch list",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+
+                    } else {
+                        //remove from watchlist
+                        tvAddRemoveWatchList.text = getString(R.string.remove_from_watchlist)
+                        tvAddRemoveWatchList.setOnClickListener {
+                            viewModel.deleteMovie(movieAndTvShowDetail)
+                            runOnUiThread {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Removed from watch list",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                }
+
+            // REDIRECT TO COMMENT FORM
             tvWriteComment.setOnClickListener {
                 CommentFormActivity.open(
                     this@MovieDetailActivity,
@@ -212,12 +217,19 @@ class MovieDetailActivity : AppCompatActivity() {
 
     companion object {
         const val PAGE_TITLE = "page_title"
-        const val MOVIE_DETAIL = "movie_detail"
+        private const val MOVIE_ID = "movie_id"
+        private const val MOVIE_DETAIL = "movie_detail"
 
-        fun open(activity: AppCompatActivity, title: String?, data: MovieAndTvShow) {
+        fun open(
+            activity: AppCompatActivity,
+            title: String?,
+            movieId: String,
+            movieDetail: MovieAndTvShow
+        ) {
             val intent = Intent(activity, MovieDetailActivity::class.java)
             intent.putExtra(PAGE_TITLE, title)
-            intent.putExtra(MOVIE_DETAIL, data)
+            intent.putExtra(MOVIE_ID, movieId)
+            intent.putExtra(MOVIE_DETAIL, movieDetail)
             ActivityCompat.startActivity(activity, intent, null)
         }
     }

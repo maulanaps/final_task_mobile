@@ -1,11 +1,12 @@
 package com.example.submission05.utils
 
 import com.example.submission03.model.MovieAndTvShow
+import com.example.submission03.model.MovieAndTvShowEntity
 
 class DataConverter {
     companion object {
-        fun movieToEntity(movieAndTvShow: MovieAndTvShow): MovieAndTvShow {
-            return MovieAndTvShow(
+        fun movieTvShowToEntity(movieAndTvShow: MovieAndTvShow): MovieAndTvShowEntity {
+            return MovieAndTvShowEntity(
                 movieAndTvShow.id,
                 movieAndTvShow.adult,
                 movieAndTvShow.backdropPath,
@@ -22,7 +23,7 @@ class DataConverter {
             )
         }
 
-        fun entityToMovie(movieAndTvShowEntity: MovieAndTvShow): MovieAndTvShow {
+        fun entityToMovieTvShow(movieAndTvShowEntity: MovieAndTvShowEntity): MovieAndTvShow {
             return MovieAndTvShow(
                 movieAndTvShowEntity.id,
                 movieAndTvShowEntity.adult,

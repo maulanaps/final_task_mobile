@@ -1,6 +1,5 @@
 package com.example.submission05.ui.main
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +7,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView.*
 import com.example.submission03.*
@@ -21,19 +21,25 @@ import com.example.submission05.constant.Constants.Companion.TOP_RATED
 import com.example.submission05.constant.Constants.Companion.UPCOMING
 import com.example.submission05.data.room.watchlist.WatchListDatabase
 import com.example.submission05.ui.list_movie.MovieListActivity
-import com.example.submission05.ui.list_movie_tvshow_detail.MovieDetailActivity
+import com.example.submission05.ui.detail_movie_tvshow.MovieDetailActivity
 import com.example.submission05.ui.list_popular_people.PopularPeopleListActivity
 import com.example.submission05.ui.list_tvshow.TvShowListActivity
 import com.example.submission05.ui.list_watchlist.WatchlistAllActivity
+import com.example.submission05.ui.list_watchlist.WatchlistShowAllViewModel
 import com.example.submission05.ui.login.LoginActivity
+import com.example.submission05.utils.DataConverter
 
-@SuppressLint("StaticFieldLeak")
-
-private lateinit var adapter: WatchlistAdapter
-private lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    @SuppressLint("UseCompatLoadingForDrawables")
+
+    private lateinit var adapter: WatchlistAdapter
+    private lateinit var binding: ActivityMainBinding
+
+    // VIEW MODEL
+    private val viewModel: WatchlistShowAllViewModel by viewModels {
+        val watchListDao = WatchListDatabase.getInstance(this@MainActivity).WatchListDao()
+        WatchlistShowAllViewModel.provideFactory(watchListDao, this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,14 +48,14 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.title = "Main Menu"
 
-        // search
+        // SEARCH BUTTON
         binding.ivSearchBtn.setOnClickListener {
             val query = binding.etSearchText.text.toString()
             println(query)
             if (query.isBlank()) {
                 val builder = AlertDialog.Builder(this@MainActivity)
                 builder.setMessage("Please write the movie's title")
-                builder.setPositiveButton(android.R.string.ok) { dialog, which ->
+                builder.setPositiveButton(android.R.string.ok) { _, _ ->
                     binding.etSearchText.setText("")
                 }
                 builder.show()
@@ -97,19 +103,23 @@ class MainActivity : AppCompatActivity() {
         binding.rvWatchList.adapter = adapter
 
         // GET WATCHLIST DATA
-        val watchListDb = WatchListDatabase.getInstance(this@MainActivity)
-        val watchListDao = watchListDb.WatchListDao()
+        viewModel.watchlistShowAll.observe(this@MainActivity) { watchlistMoviesEntity ->
 
-        watchListDao.getAll().observe(this@MainActivity) {watchlistMovies ->
-            if (watchlistMovies.isNullOrEmpty()){
+            val watchlistMovies =
+                watchlistMoviesEntity.map { DataConverter.entityToMovieTvShow(it) }
+            if (watchlistMovies.isNullOrEmpty()) {
                 binding.tvWatchlistEmpty.visibility = VISIBLE
                 binding.rvWatchList.visibility = GONE
                 binding.tvShowAllWatchList.setOnClickListener {
-                    runOnUiThread {
-                        Toast.makeText(applicationContext, "No Watchlist Available", Toast.LENGTH_SHORT).show()
-                    }
+                    Log.d("blah", "onCreate: $watchlistMovies")
+                    Toast.makeText(
+                        this,
+                        "No Watchlist Available",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             } else {
+
                 adapter.setAdapter(watchlistMovies)
                 binding.tvWatchlistEmpty.visibility = GONE
                 binding.rvWatchList.visibility = VISIBLE
@@ -123,9 +133,18 @@ class MainActivity : AppCompatActivity() {
         // WATCHLIST ITEM ON CLICK
         adapter.delegate = object : WatchlistDelegate {
             override fun onItemClicked(movieAndTvShow: MovieAndTvShow) {
-                MovieDetailActivity.open(this@MainActivity, "Watch List Movie", movieAndTvShow)
+                MovieDetailActivity.open(
+                    this@MainActivity,
+                    "Watch List Movie",
+                    movieAndTvShow.id.toString(),
+                    movieAndTvShow
+                )
             }
         }
+    }
+
+    fun makeToast(msg: String) {
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

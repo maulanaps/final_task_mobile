@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/bottom"
     android:contentDescription="@string/logo"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    tools:context="com.example.submission05.ui.main.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

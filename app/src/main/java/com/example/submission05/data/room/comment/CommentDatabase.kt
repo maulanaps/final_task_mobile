@@ -2,8 +2,7 @@ package com.example.submission05.data.room.comment
 
 import android.content.Context
 import androidx.room.*
-import androidx.room.migration.AutoMigrationSpec
-import com.example.submission05.data.model.CommentEntity
+import com.example.submission05.data.entity.CommentEntity
 
 @Database(
     entities = [CommentEntity::class],
