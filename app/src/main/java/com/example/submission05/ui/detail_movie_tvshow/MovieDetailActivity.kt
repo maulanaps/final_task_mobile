@@ -25,6 +25,7 @@ import com.example.submission05.utils.dialog.ErrorDialog
 import com.example.submission05.data.room.comment.CommentDatabase
 import com.example.submission05.data.room.watchlist.WatchListDatabase
 import com.example.submission05.data.entity.CommentEntity
+import com.example.submission05.utils.dialog.LoadingDialog
 import com.faltenreich.skeletonlayout.Skeleton
 
 class MovieDetailActivity : AppCompatActivity() {
@@ -33,6 +34,8 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var adapter: CommentAdapter
     private lateinit var skeletonBackdrop: Skeleton
     private lateinit var skeletonPoster: Skeleton
+    // LOADING DIALOG
+    private val loading = LoadingDialog()
 
     // VIEW MODEL
     private val viewModel: MovieDetailViewModel by viewModels {
@@ -48,8 +51,6 @@ class MovieDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // EXTRAS
-        val movieAndTvShowDetail =
-            intent.getParcelableExtra<MovieAndTvShow>(MOVIE_DETAIL) as MovieAndTvShow
         val title = intent.getStringExtra(PAGE_TITLE)
 
         supportActionBar?.title = title
@@ -64,23 +65,49 @@ class MovieDetailActivity : AppCompatActivity() {
         skeletonBackdrop = findViewById(R.id.skeletonLayoutBackdrop)
         skeletonPoster = findViewById(R.id.skeletonLayoutPoster)
 
-        // GET DATA
-        getData(movieAndTvShowDetail.backdropPath, movieAndTvShowDetail.posterPath)
+        // GET MOVIE DETAIL
+        // api call
+        viewModel.movieDetailApiCall()
+        // loading
+        viewModel.isLoading.observe(this) { isLoading ->
+            if (isLoading) {
+                loading.startLoading(this)
+                skeletonBackdrop.showSkeleton()
+                skeletonPoster.showSkeleton()
+            } else {
+                loading.endLoading()
+            }
+        }
+        // error
+        viewModel.isError.observe(this) { isError ->
+            if (isError) {
+                loading.endLoading()
+                ErrorDialog.showError(this, "Failed to load data")
+            }
+        }
+        // get data
+        viewModel.movieDetail.observe(this) { movieDetail ->
+            loadImages(movieDetail.backdropPath, movieDetail.posterPath)
+
+            binding.apply {
+                val detailRatingStr = "⭐ ${movieDetail.voteAverage}"
+                detailTitle.text = movieDetail.title
+                detailReleaseDate.text = movieDetail.releaseDate
+                detailRating.text = detailRatingStr
+                detailOverview.text = movieDetail.overview
+            }
+        }
 
         // SWIPE REFRESH
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = false
             Log.d("blah2", "onRefresh: dor")
-            getData(movieAndTvShowDetail.backdropPath, movieAndTvShowDetail.posterPath)
+            // api call
+            viewModel.movieDetailApiCall()
         }
 
         // GET DATABASE DATA
         binding.apply {
-            val detailRatingStr = "⭐ ${movieAndTvShowDetail.voteAverage}"
-            detailTitle.text = movieAndTvShowDetail.title
-            detailReleaseDate.text = movieAndTvShowDetail.releaseDate
-            detailRating.text = detailRatingStr
-            detailOverview.text = movieAndTvShowDetail.overview
 
             // comment db
             viewModel.comments
@@ -102,23 +129,22 @@ class MovieDetailActivity : AppCompatActivity() {
                 .observe(this@MovieDetailActivity) {
                     if (it.isEmpty()) {
                         // add to watchlist
-                        tvAddRemoveWatchList.text = "Add to Watchlist"
+                        tvAddRemoveWatchList.text = getString(R.string.AddtoWatchlist)
                         tvAddRemoveWatchList.setOnClickListener {
-                            viewModel.insertMovie(movieAndTvShowDetail)
-                            runOnUiThread {
-                                Toast.makeText(
-                                    applicationContext,
-                                    "Added to watch list",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+
+                            viewModel.insertMovie(viewModel.movieDetail.value!!)
+                            Toast.makeText(
+                                applicationContext,
+                                "Added to watch list",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
 
                     } else {
                         //remove from watchlist
                         tvAddRemoveWatchList.text = getString(R.string.remove_from_watchlist)
                         tvAddRemoveWatchList.setOnClickListener {
-                            viewModel.deleteMovie(movieAndTvShowDetail)
+                            viewModel.deleteMovie(viewModel.movieDetail.value!!)
                             runOnUiThread {
                                 Toast.makeText(
                                     applicationContext,
@@ -134,7 +160,7 @@ class MovieDetailActivity : AppCompatActivity() {
             tvWriteComment.setOnClickListener {
                 CommentFormActivity.open(
                     this@MovieDetailActivity,
-                    movieAndTvShowDetail.id!!,
+                    viewModel.movieDetail.value?.id!!,
                     WRITE_COMMENT,
                     null
                 )
@@ -144,7 +170,7 @@ class MovieDetailActivity : AppCompatActivity() {
                 override fun onItemClicked(commentEntity: CommentEntity) {
                     CommentFormActivity.open(
                         this@MovieDetailActivity,
-                        movieAndTvShowDetail.id!!,
+                        viewModel.movieDetail.value?.id!!,
                         EDIT_COMMENT,
                         commentEntity
                     )
@@ -153,7 +179,7 @@ class MovieDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun getData(backdropPath: String?, posterPath: String?) {
+    private fun loadImages(backdropPath: String?, posterPath: String?) {
         skeletonBackdrop.showSkeleton()
         skeletonPoster.showSkeleton()
 

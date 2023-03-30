@@ -72,7 +72,6 @@ class MovieListActivity : AppCompatActivity() {
                 skeleton.showOriginal()
             }
         }
-
         // error
         viewModel.isError.observe(this) { isError ->
             if (isError) {

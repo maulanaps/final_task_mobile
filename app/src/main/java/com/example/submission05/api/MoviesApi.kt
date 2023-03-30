@@ -1,8 +1,11 @@
 package com.example.submission05.api
 
+import com.example.submission03.model.MovieAndTvShow
 import com.example.submission05.data.model.Movies
+import com.example.submission05.data.model.PopularPeopleDetail
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MoviesApi {
@@ -20,4 +23,7 @@ interface MoviesApi {
 
     @GET("search/movie?api_key=2a35719cd2c1e31362c38eeda7f0e117")
     fun searchMovies(@Query("query") query: String) : Call<Movies>
+
+    @GET("movie/{movie_id}?api_key=2a35719cd2c1e31362c38eeda7f0e117&language=en-US")
+    fun getMovieDetail(@Path("movie_id") movieId: Int) : Call<MovieAndTvShow>
 }

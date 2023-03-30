@@ -42,4 +42,5 @@
     <string name="watchlist_is_empty">Watchlist is Empty</string>
     <string name="movie_not_found">Movie Not Found</string>
     <string name="remove_from_watchlist">Remove from watchlist</string>
+    <string name="AddtoWatchlist">Add to Watchlist</string>
 </resources>
