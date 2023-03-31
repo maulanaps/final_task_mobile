@@ -1,32 +1,29 @@
 package com.example.submission05.ui.detail_popular_people
 
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.example.submission03.R
 import com.example.submission03.databinding.ActivityPopularPeopleDetailBinding
 import com.example.submission03.model.MovieAndTvShow
-import com.example.submission05.api.PopularPeoplesApi
-import com.example.submission05.api.RetrofitHelper
 import com.example.submission05.utils.dialog.ErrorDialog
 import com.example.submission05.utils.dialog.LoadingDialog
-import com.example.submission05.data.model.PopularPeopleDetail
 import com.example.submission05.ui.detail_movie_tvshow.MovieDetailActivity
-import com.example.submission05.ui.list_movie.MovieListViewModel
 import com.example.submission05.ui.main.WatchlistAdapter
 import com.example.submission05.ui.main.WatchlistDelegate
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.applySkeleton
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.time.LocalDate
 import java.time.Period
-import kotlin.text.Typography.section
 
 
 class PopularPeopleDetailActivity : AppCompatActivity() {
@@ -65,7 +62,6 @@ class PopularPeopleDetailActivity : AppCompatActivity() {
         skeleton = binding.rvPeopleKnowFor.applySkeleton(R.layout.movie_item, 4)
         skeletonProfileImg = findViewById(R.id.skeletonPeopleProfilePic)
 
-
         // GET MOVIES
         // api call
         viewModel.peopleDetailApiCall(peopleId)
@@ -94,15 +90,38 @@ class PopularPeopleDetailActivity : AppCompatActivity() {
                 val genderAndRole =
                     getGender(peopleDetail?.gender!!) + ", ${peopleDetail.knownForDepartment}"
 
-                tvPeopleName.text = peopleDetail.name
-                tvGenderAndRole.text = genderAndRole
-                tvBirthday.text = calcAge(peopleDetail.birthday!!, peopleDetail.deathday)
-                tvBirthplace.text = peopleDetail.placeOfBirth
-                tvKnownAs.text = peopleDetail.alsoKnownAs?.joinToString()
-                tvBiography.text = peopleDetail.biography
+                tvPeopleName.text = peopleDetail.name ?: ""
+                tvGenderAndRole.text = genderAndRole ?: ""
+                tvBirthday.text = calcAge(peopleDetail.birthday, peopleDetail.deathday) ?: ""
+                tvBirthplace.text = peopleDetail.placeOfBirth ?: ""
+                tvKnownAs.text = peopleDetail.alsoKnownAs.joinToString()
+                tvBiography.text = peopleDetail.biography ?: ""
 
                 Glide.with(this@PopularPeopleDetailActivity)
-                    .load("https://image.tmdb.org/t/p/original" + peopleDetail?.profilePath)
+                    .load("https://image.tmdb.org/t/p/original" + peopleDetail.profilePath)
+                    .addListener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable?>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            Log.d("foo", "onLoadFailed: FAILED")
+                            ErrorDialog.showError(this@PopularPeopleDetailActivity, "Failed to load data")
+                            return false
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable?>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            Log.d("foo", "onResourceReady: backdrop image ready")
+                            return false
+                        }
+                    })
                     .placeholder(R.drawable.image_placeholder)
                     .into(ivPeopleProfilePic)
 
@@ -121,20 +140,28 @@ class PopularPeopleDetailActivity : AppCompatActivity() {
                     this@PopularPeopleDetailActivity,
                     movieAndTvShow.title,
                     movieAndTvShow.id.toString(),
-                    movieAndTvShow
+                    movieAndTvShow.mediaType!!
                 )
             }
         }
     }
 
-    fun getGender(genderId: Int): String {
-        if (genderId == 1) {
-            return "Female"
+    private fun getGender(genderId: Int): String? {
+        return when (genderId){
+            0 -> "Undefined"
+            1 -> "Female"
+            2 -> "Male"
+            3 -> "Non-binary"
+            else -> null
         }
-        return "Male"
     }
 
-    fun calcAge(birthday: String, deathday: String?): String {
+    private fun calcAge(birthday: String?, deathday: String?): String? {
+
+        if (birthday == null) {
+            return null
+        }
+
         val localDate = LocalDate.parse(birthday)
         val age = Period.between(localDate, LocalDate.now()).years
 

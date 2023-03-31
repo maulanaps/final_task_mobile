@@ -1,4 +1,4 @@
-package com.example.submission05.data.model
+package com.example.submission05.data.remote.model
 
 import com.example.submission03.model.MovieAndTvShow
 import com.google.gson.annotations.SerializedName

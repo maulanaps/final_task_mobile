@@ -22,9 +22,9 @@ import com.example.submission03.model.MovieAndTvShow
 import com.example.submission05.constant.Constants.Companion.EDIT_COMMENT
 import com.example.submission05.constant.Constants.Companion.WRITE_COMMENT
 import com.example.submission05.utils.dialog.ErrorDialog
-import com.example.submission05.data.room.comment.CommentDatabase
-import com.example.submission05.data.room.watchlist.WatchListDatabase
-import com.example.submission05.data.entity.CommentEntity
+import com.example.submission05.data.local.room.comment.CommentDatabase
+import com.example.submission05.data.local.room.watchlist.WatchListDatabase
+import com.example.submission05.data.local.entity.CommentEntity
 import com.example.submission05.utils.dialog.LoadingDialog
 import com.faltenreich.skeletonlayout.Skeleton
 
@@ -52,6 +52,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
         // EXTRAS
         val title = intent.getStringExtra(PAGE_TITLE)
+        val mediaType = intent.getStringExtra(MEDIA_TYPE)!!
 
         supportActionBar?.title = title
 
@@ -67,7 +68,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
         // GET MOVIE DETAIL
         // api call
-        viewModel.movieDetailApiCall()
+        apiCall(mediaType)
         // loading
         viewModel.isLoading.observe(this) { isLoading ->
             if (isLoading) {
@@ -103,7 +104,7 @@ class MovieDetailActivity : AppCompatActivity() {
             binding.swipeRefreshLayout.isRefreshing = false
             Log.d("blah2", "onRefresh: dor")
             // api call
-            viewModel.movieDetailApiCall()
+            apiCall(mediaType)
         }
 
         // GET DATABASE DATA
@@ -125,14 +126,23 @@ class MovieDetailActivity : AppCompatActivity() {
                 }
 
             // watchlist db
-            viewModel.movieById
+            viewModel.movieTvShowById
                 .observe(this@MovieDetailActivity) {
                     if (it.isEmpty()) {
                         // add to watchlist
                         tvAddRemoveWatchList.text = getString(R.string.AddtoWatchlist)
                         tvAddRemoveWatchList.setOnClickListener {
 
-                            viewModel.insertMovie(viewModel.movieDetail.value!!)
+                            val newItem = viewModel.movieDetail.value!!
+                            if (newItem.title == null){
+                                newItem.mediaType = "tv"
+                            } else {
+                                newItem.mediaType = "movie"
+                            }
+
+                            Log.d("blah3", "onCreate: $newItem")
+
+                            viewModel.insertMovie(newItem)
                             Toast.makeText(
                                 applicationContext,
                                 "Added to watch list",
@@ -179,6 +189,13 @@ class MovieDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun apiCall(mediaType: String){
+        if (mediaType == "movie") {
+            viewModel.movieDetailApiCall()
+        } else if (mediaType == "tv"){
+            viewModel.tvShowDetailApiCall()
+        }
+    }
     private fun loadImages(backdropPath: String?, posterPath: String?) {
         skeletonBackdrop.showSkeleton()
         skeletonPoster.showSkeleton()
@@ -244,18 +261,18 @@ class MovieDetailActivity : AppCompatActivity() {
     companion object {
         const val PAGE_TITLE = "page_title"
         private const val MOVIE_ID = "movie_id"
-        private const val MOVIE_DETAIL = "movie_detail"
+        private const val MEDIA_TYPE = "media_type"
 
         fun open(
             activity: AppCompatActivity,
             title: String?,
             movieId: String,
-            movieDetail: MovieAndTvShow
+            mediaType: String
         ) {
             val intent = Intent(activity, MovieDetailActivity::class.java)
             intent.putExtra(PAGE_TITLE, title)
             intent.putExtra(MOVIE_ID, movieId)
-            intent.putExtra(MOVIE_DETAIL, movieDetail)
+            intent.putExtra(MEDIA_TYPE, mediaType)
             ActivityCompat.startActivity(activity, intent, null)
         }
     }

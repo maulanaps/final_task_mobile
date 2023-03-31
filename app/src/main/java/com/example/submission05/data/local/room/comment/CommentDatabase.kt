@@ -1,8 +1,8 @@
-package com.example.submission05.data.room.comment
+package com.example.submission05.data.local.room.comment
 
 import android.content.Context
 import androidx.room.*
-import com.example.submission05.data.entity.CommentEntity
+import com.example.submission05.data.local.entity.CommentEntity
 
 @Database(
     entities = [CommentEntity::class],

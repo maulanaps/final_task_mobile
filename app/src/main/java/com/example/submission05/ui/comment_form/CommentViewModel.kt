@@ -3,8 +3,8 @@ package com.example.submission05.ui.comment_form
 import android.os.Bundle
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
-import com.example.submission05.data.entity.CommentEntity
-import com.example.submission05.data.room.comment.CommentDao
+import com.example.submission05.data.local.entity.CommentEntity
+import com.example.submission05.data.local.room.comment.CommentDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

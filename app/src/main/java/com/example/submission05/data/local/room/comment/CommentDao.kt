@@ -1,8 +1,8 @@
-package com.example.submission05.data.room.comment
+package com.example.submission05.data.local.room.comment
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.submission05.data.entity.CommentEntity
+import com.example.submission05.data.local.entity.CommentEntity
 
 @Dao
 interface CommentDao {

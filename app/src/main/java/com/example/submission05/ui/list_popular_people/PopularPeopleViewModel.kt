@@ -5,10 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.submission03.model.MovieAndTvShow
-import com.example.submission05.api.PopularPeoplesApi
-import com.example.submission05.api.RetrofitHelper
-import com.example.submission05.data.model.PopularPeople
-import com.example.submission05.data.model.PopularPeoples
+import com.example.submission05.data.remote.api.PopularPeoplesApi
+import com.example.submission05.data.remote.api.RetrofitHelper
+import com.example.submission05.data.remote.model.PopularPeople
+import com.example.submission05.data.remote.model.PopularPeoples
 import com.example.submission05.utils.dialog.ErrorDialog
 import retrofit2.Call
 import retrofit2.Callback

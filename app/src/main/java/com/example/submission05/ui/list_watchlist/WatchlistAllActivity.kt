@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.VISIBLE
 import com.example.submission05.ui.detail_movie_tvshow.MovieDetailActivity
 import com.example.submission03.databinding.ActivityWatchlistBinding
 import com.example.submission03.model.MovieAndTvShow
-import com.example.submission05.data.room.watchlist.WatchListDatabase
+import com.example.submission05.data.local.room.watchlist.WatchListDatabase
 import com.example.submission05.utils.DataConverter
 import com.faltenreich.skeletonlayout.Skeleton
 import kotlinx.coroutines.CoroutineScope
@@ -66,7 +66,7 @@ class WatchlistAllActivity : AppCompatActivity() {
                         this@WatchlistAllActivity,
                         "Watch List Movie",
                         movieAndTvShow.id.toString(),
-                        movieAndTvShow
+                        movieAndTvShow.mediaType!!
                     )
                 }
 

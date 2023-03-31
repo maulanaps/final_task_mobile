@@ -89,7 +89,7 @@ class TvShowListActivity : AppCompatActivity() {
 
         adapter.delegate = object : MovieDelegate {
             override fun onItemClicked(movieAndTvShow: MovieAndTvShow) {
-                MovieDetailActivity.open(this@TvShowListActivity, "Tv Show", movieAndTvShow.id.toString(), movieAndTvShow)
+                MovieDetailActivity.open(this@TvShowListActivity, "Tv Show", movieAndTvShow.id.toString(), "tv")
                 println(movieAndTvShow)
             }
         }

@@ -19,7 +19,7 @@ import com.example.submission05.constant.Constants.Companion.ON_THE_AIR
 import com.example.submission05.constant.Constants.Companion.POPULAR
 import com.example.submission05.constant.Constants.Companion.TOP_RATED
 import com.example.submission05.constant.Constants.Companion.UPCOMING
-import com.example.submission05.data.room.watchlist.WatchListDatabase
+import com.example.submission05.data.local.room.watchlist.WatchListDatabase
 import com.example.submission05.ui.list_movie.MovieListActivity
 import com.example.submission05.ui.detail_movie_tvshow.MovieDetailActivity
 import com.example.submission05.ui.list_popular_people.PopularPeopleListActivity
@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
                     this@MainActivity,
                     "Watch List Movie",
                     movieAndTvShow.id.toString(),
-                    movieAndTvShow
+                    movieAndTvShow.mediaType!!
                 )
             }
         }

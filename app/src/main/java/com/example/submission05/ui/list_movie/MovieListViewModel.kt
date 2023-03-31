@@ -5,10 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.submission03.model.MovieAndTvShow
-import com.example.submission05.api.MoviesApi
-import com.example.submission05.api.RetrofitHelper
+import com.example.submission05.data.remote.api.MoviesApi
+import com.example.submission05.data.remote.api.RetrofitHelper
 import com.example.submission05.constant.Constants
-import com.example.submission05.data.model.Movies
+import com.example.submission05.data.remote.model.Movies
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

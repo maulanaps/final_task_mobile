@@ -5,12 +5,11 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import com.example.submission03.model.MovieAndTvShow
-import com.example.submission05.api.MoviesApi
-import com.example.submission05.api.RetrofitHelper
-import com.example.submission05.constant.Constants
-import com.example.submission05.data.model.Movies
-import com.example.submission05.data.room.comment.CommentDao
-import com.example.submission05.data.room.watchlist.WatchListDao
+import com.example.submission05.data.remote.api.MoviesApi
+import com.example.submission05.data.remote.api.RetrofitHelper
+import com.example.submission05.data.remote.api.TvShowsApi
+import com.example.submission05.data.local.room.comment.CommentDao
+import com.example.submission05.data.local.room.watchlist.WatchListDao
 import com.example.submission05.utils.DataConverter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,17 +17,16 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.text.Typography.section
 
 class MovieDetailViewModel(
-    private val movieId: String,
+    private val movieTvShowId: String,
     private val watchListDao: WatchListDao,
     private val commentDao: CommentDao
 ) : ViewModel() {
 
     // DATABASE
-    val movieById = watchListDao.getMovieById(movieId)
-    val comments = commentDao.getCommentsByMovieId(movieId)
+    val movieTvShowById = watchListDao.getMovieById(movieTvShowId)
+    val comments = commentDao.getCommentsByMovieId(movieTvShowId)
 
     companion object {
         fun provideFactory(
@@ -83,24 +81,56 @@ class MovieDetailViewModel(
         _isError.value = false
 
         val moviesApi = RetrofitHelper.getInstance().create(MoviesApi::class.java)
-        val call: Call<MovieAndTvShow> = moviesApi.getMovieDetail(movieId.toInt())
+        val call: Call<MovieAndTvShow> = moviesApi.getMovieDetail(movieTvShowId.toInt())
 
         call.enqueue(object : Callback<MovieAndTvShow> {
             override fun onResponse(
                 call: Call<MovieAndTvShow>,
                 response: Response<MovieAndTvShow>
             ) {
+                Log.d("blah2", "onResponse: $response")
                 if (response.isSuccessful) {
                     val movie = response.body()
                     _movieDetail.value = movie
                     _isLoading.value = false
-                    Log.d("blah", "onResponse: $movie")
+                    Log.d("blah2", "onResponseSuccessful: $movie")
                 }
-                Log.d("foo", "after success: ")
+                Log.d("blah2", "after success: ")
             }
 
             override fun onFailure(call: Call<MovieAndTvShow>, t: Throwable) {
-                Log.d("foo", "onFailure: ${t.message}")
+                Log.d("blah2", "onFailure: ${t.message}")
+                _isLoading.value = false
+                _isError.value = true
+            }
+        })
+    }
+
+    fun tvShowDetailApiCall() {
+        // INITIATE VALUE
+        _isLoading.value = true
+        _isError.value = false
+
+        val tvShowApi = RetrofitHelper.getInstance().create(TvShowsApi::class.java)
+        val call: Call<MovieAndTvShow> = tvShowApi.getTvShowDetail(movieTvShowId.toInt())
+
+        call.enqueue(object : Callback<MovieAndTvShow> {
+            override fun onResponse(
+                call: Call<MovieAndTvShow>,
+                response: Response<MovieAndTvShow>
+            ) {
+                Log.d("blah2", "onResponse: $response")
+                if (response.isSuccessful) {
+                    val movie = response.body()
+                    _movieDetail.value = movie
+                    _isLoading.value = false
+                    Log.d("blah2", "onResponseSuccessful: $movie")
+                }
+                Log.d("blah2", "after success: ")
+            }
+
+            override fun onFailure(call: Call<MovieAndTvShow>, t: Throwable) {
+                Log.d("blah2", "onFailure: ${t.message}")
                 _isLoading.value = false
                 _isError.value = true
             }

@@ -1,7 +1,7 @@
-package com.example.submission05.api
+package com.example.submission05.data.remote.api
 
-import com.example.submission05.data.model.PopularPeopleDetail
-import com.example.submission05.data.model.PopularPeoples
+import com.example.submission05.data.remote.model.PopularPeopleDetail
+import com.example.submission05.data.remote.model.PopularPeoples
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET

@@ -3,9 +3,9 @@ package com.example.submission05.ui.detail_popular_people
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.submission05.api.PopularPeoplesApi
-import com.example.submission05.api.RetrofitHelper
-import com.example.submission05.data.model.PopularPeopleDetail
+import com.example.submission05.data.remote.api.PopularPeoplesApi
+import com.example.submission05.data.remote.api.RetrofitHelper
+import com.example.submission05.data.remote.model.PopularPeopleDetail
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

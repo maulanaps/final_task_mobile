@@ -12,8 +12,8 @@ import androidx.core.app.ActivityCompat
 import com.example.submission03.databinding.ActivityCommentFormBinding
 import com.example.submission05.constant.Constants.Companion.EDIT_COMMENT
 import com.example.submission05.constant.Constants.Companion.WRITE_COMMENT
-import com.example.submission05.data.room.comment.CommentDatabase
-import com.example.submission05.data.entity.CommentEntity
+import com.example.submission05.data.local.room.comment.CommentDatabase
+import com.example.submission05.data.local.entity.CommentEntity
 
 
 class CommentFormActivity : AppCompatActivity() {

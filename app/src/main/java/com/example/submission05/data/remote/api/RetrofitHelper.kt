@@ -1,4 +1,4 @@
-package com.example.submission05.api
+package com.example.submission05.data.remote.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

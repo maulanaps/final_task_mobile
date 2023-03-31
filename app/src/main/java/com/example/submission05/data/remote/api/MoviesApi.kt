@@ -1,8 +1,8 @@
-package com.example.submission05.api
+package com.example.submission05.data.remote.api
 
 import com.example.submission03.model.MovieAndTvShow
-import com.example.submission05.data.model.Movies
-import com.example.submission05.data.model.PopularPeopleDetail
+import com.example.submission05.data.remote.model.Movies
+import com.example.submission05.data.remote.model.PopularPeopleDetail
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.submission03.R
-import com.example.submission05.data.entity.CommentEntity
+import com.example.submission05.data.local.entity.CommentEntity
 
 class CommentAdapter : RecyclerView.Adapter<CommentViewHolder>() {
 

@@ -19,7 +19,8 @@ class DataConverter {
                 movieAndTvShow.title,
                 movieAndTvShow.video,
                 movieAndTvShow.voteAverage,
-                movieAndTvShow.voteCount
+                movieAndTvShow.voteCount,
+                movieAndTvShow.mediaType,
             )
         }
 
@@ -37,7 +38,8 @@ class DataConverter {
                 movieAndTvShowEntity.title,
                 movieAndTvShowEntity.video,
                 movieAndTvShowEntity.voteAverage,
-                movieAndTvShowEntity.voteCount
+                movieAndTvShowEntity.voteCount,
+                movieAndTvShowEntity.mediaType
             )
         }
     }

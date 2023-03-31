@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -96,7 +97,7 @@ class MovieListActivity : AppCompatActivity() {
 
         adapter.delegate = object : MovieDelegate {
             override fun onItemClicked(movieAndTvShow: MovieAndTvShow) {
-                MovieDetailActivity.open(this@MovieListActivity, title, movieAndTvShow.id.toString(), movieAndTvShow)
+                MovieDetailActivity.open(this@MovieListActivity, title, movieAndTvShow.id.toString(), "movie")
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.example.submission05.data.model
+package com.example.submission05.data.remote.model
 
 import com.google.gson.annotations.SerializedName
 

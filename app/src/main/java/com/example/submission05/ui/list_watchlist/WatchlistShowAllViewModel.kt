@@ -5,14 +5,14 @@ import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
 import com.example.submission03.model.MovieAndTvShow
 import com.example.submission03.model.MovieAndTvShowEntity
-import com.example.submission05.data.room.watchlist.WatchListDao
+import com.example.submission05.data.local.room.watchlist.WatchListDao
 import com.example.submission05.utils.DataConverter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class WatchlistShowAllViewModel(private val watchListDao: WatchListDao) : ViewModel() {
-    val watchlistShowAll: LiveData<List<MovieAndTvShowEntity>> = watchListDao.getAll()
+    val watchlistShowAll = watchListDao.getAll()
 
     companion object {
         fun provideFactory(

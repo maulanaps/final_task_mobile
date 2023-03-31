@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.submission05.ui.detail_popular_people.PopularPeopleDetailActivity
 import com.example.submission03.R
 import com.example.submission03.databinding.ActivityPopularPeopleListBinding
-import com.example.submission05.api.PopularPeoplesApi
-import com.example.submission05.api.RetrofitHelper
+import com.example.submission05.data.remote.api.PopularPeoplesApi
+import com.example.submission05.data.remote.api.RetrofitHelper
 import com.example.submission05.utils.dialog.ErrorDialog
 import com.example.submission05.utils.dialog.LoadingDialog
-import com.example.submission05.data.model.PopularPeople
-import com.example.submission05.data.model.PopularPeoples
+import com.example.submission05.data.remote.model.PopularPeople
+import com.example.submission05.data.remote.model.PopularPeoples
 import com.faltenreich.skeletonlayout.Skeleton
 import com.faltenreich.skeletonlayout.applySkeleton
 import retrofit2.Call
