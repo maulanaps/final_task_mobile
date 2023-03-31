@@ -47,9 +47,22 @@ class CommentFormActivity : AppCompatActivity() {
                 btnSubmitComment.setOnClickListener {
                     val commentWriter = etWriterName.text.toString()
                     val commentContent = etCommentContent.text.toString()
-                    val newComment = CommentEntity(movieTvShowId = movieId, writer= commentWriter, content= commentContent)
-                    viewModel.insertComment(newComment)
-                    finish()
+
+                    if (commentWriter.isEmpty()) {
+                        etWriterName.error = "Please fill your name"
+                        etWriterName.requestFocus()
+                    } else if (commentContent.isEmpty()) {
+                        etCommentContent.error = "Please write your comment"
+                        etCommentContent.requestFocus()
+                    } else {
+                        val newComment = CommentEntity(
+                            movieTvShowId = movieId,
+                            writer = commentWriter,
+                            content = commentContent
+                        )
+                        viewModel.insertComment(newComment)
+                        finish()
+                    }
                 }
             }
 
