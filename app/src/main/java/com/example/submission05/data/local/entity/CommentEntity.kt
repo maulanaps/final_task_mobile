@@ -11,7 +11,7 @@ import kotlinx.parcelize.Parcelize
 data class CommentEntity(
 
     @PrimaryKey(autoGenerate = true) val id: Int? = null,
-    @ColumnInfo("movie_id") val movieId: Int,
+    @ColumnInfo("movieTvShow_id") val movieTvShowId: Int,
     @ColumnInfo("writer") var writer: String,
     @ColumnInfo("content") var content: String
 

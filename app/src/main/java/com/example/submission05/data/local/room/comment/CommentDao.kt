@@ -6,8 +6,8 @@ import com.example.submission05.data.local.entity.CommentEntity
 
 @Dao
 interface CommentDao {
-    @Query("SELECT * FROM comment_table WHERE movie_id = :movieId")
-    fun getCommentsByMovieId(movieId: String) : LiveData<List<CommentEntity>>
+    @Query("SELECT * FROM comment_table WHERE movieTvShow_id = :movieTvShowId")
+    fun getCommentsByMovieId(movieTvShowId: String) : LiveData<List<CommentEntity>>
 
     @Insert
     fun insert(commentEntity: CommentEntity)

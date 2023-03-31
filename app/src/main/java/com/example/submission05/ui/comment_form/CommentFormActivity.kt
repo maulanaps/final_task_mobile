@@ -47,7 +47,7 @@ class CommentFormActivity : AppCompatActivity() {
                 btnSubmitComment.setOnClickListener {
                     val commentWriter = etWriterName.text.toString()
                     val commentContent = etCommentContent.text.toString()
-                    val newComment = CommentEntity(movieId = movieId, writer= commentWriter, content= commentContent)
+                    val newComment = CommentEntity(movieTvShowId = movieId, writer= commentWriter, content= commentContent)
                     viewModel.insertComment(newComment)
                     finish()
                 }
